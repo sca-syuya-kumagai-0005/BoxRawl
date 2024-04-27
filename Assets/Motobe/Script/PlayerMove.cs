@@ -26,6 +26,7 @@ public class PlayerMove : MonoBehaviour
 
     private bool OnGround;
     private bool OnWall;
+    private bool Drop;
     private float WallJumpCount;
 
     // Start is called before the first frame update
@@ -38,6 +39,7 @@ public class PlayerMove : MonoBehaviour
         Hp = DefaultHp + PlusHp;
         JumpCount = 0;
         OnWall = false;
+        Drop = false;
     }
 
     // Update is called once per frame
@@ -48,18 +50,15 @@ public class PlayerMove : MonoBehaviour
         {
             if (JumpCount==0)
             {
-                rb = GetComponent<Rigidbody2D>();
                 rb.velocity = new Vector3(0, JumpForce, 0);
-                JumpCount += 1;
-                OnGround = false;
             }
             else if (JumpCount==1) 
             {
-                rb = GetComponent<Rigidbody2D>();
                 rb.velocity = new Vector3(0, -JumpForce*2, 0);
-                JumpCount += 1;
-                OnGround = false;
+                Drop = true;
             }
+            JumpCount += 1;
+            OnGround = false;
         }
         //ï«ÇﬂÇËçûÇ›ñhé~
         if(Input.GetKeyDown(KeyCode.A)|| Input.GetKeyDown(KeyCode.D))
@@ -69,6 +68,7 @@ public class PlayerMove : MonoBehaviour
         //à⁄ìÆ
         if (Input.GetKey(KeyCode.A))
         {
+            PlayerSkin.rota = 1;
             if (OnWall == false)
             {
                 this.transform.position += new Vector3(-Speed, 0, 0);
@@ -76,6 +76,7 @@ public class PlayerMove : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.D))
         {
+            PlayerSkin.rota = -1;
             if (OnWall == false)
             {
                 this.transform.position += new Vector3(Speed, 0, 0);
@@ -95,10 +96,15 @@ public class PlayerMove : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Ground"))
         {
+            PlayerSkin.rota = 0;
             OnGround = true;
             JumpCount = 0;
+            Drop = false;
         }
-        if (other.gameObject.CompareTag("Wall"))
+    }
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Wall"))
         {
             OnWall = true;
             JumpCount = 0;

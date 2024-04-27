@@ -5,11 +5,13 @@ using UnityEngine;
 public class PlayerSkin : MonoBehaviour
 {
     public static bool Rota;
+    public static int rota;
     float speed;
     // Start is called before the first frame update
     void Start()
     {
-        speed = 3;
+        rota = 0;
+        speed = 1.5f;
     }
 
     // Update is called once per frame
@@ -17,7 +19,7 @@ public class PlayerSkin : MonoBehaviour
     {
         if(Rota==true)
         {
-            transform.Rotate(0, 0, speed);
+            transform.Rotate(0, 0, speed*rota);
         }
         if (Rota == false)
         {
