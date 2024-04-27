@@ -27,6 +27,7 @@ public class ButtonManager : MonoBehaviour
     {
         KeyManager();
         SelectButton();
+        StateMove();
     }
 
     void ArraySet()
@@ -58,7 +59,6 @@ public class ButtonManager : MonoBehaviour
                 selectButtonNumber++;
             }
         }
-       
     }
 
     void SelectButton()
@@ -95,7 +95,7 @@ public class ButtonManager : MonoBehaviour
         }
     }
 
-    void StateMove()
+   public static void StateMove()
     {
         if(Input.GetKeyDown(KeyCode.Return)||Input.GetMouseButtonDown(0))
         {
@@ -122,6 +122,25 @@ public class ButtonManager : MonoBehaviour
                     }
                     break;
             }
+        }
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            state = GameState.TITLE;
+        }
+
+        if(Input.GetMouseButtonDown(1))
+        {
+            state=GameState.MENU;
+        }
+
+        if(Input.GetKeyDown(KeyCode.Z))
+        {
+            //åàíËÇµÇΩéûÇÃèàóù
+        }
+
+        if(Input.GetKeyDown(KeyCode.X))
+        {
+            state = GameState.MENU;
         }
     }
 }
