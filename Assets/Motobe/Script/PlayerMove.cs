@@ -117,6 +117,7 @@ public class PlayerMove : MonoBehaviour
         if (collision.gameObject.CompareTag("Wall"))
         {
             OnWall = true;
+            PlayerSkin.Rota = false;
         }
         if (collision.gameObject.CompareTag("Ground"))
         {
