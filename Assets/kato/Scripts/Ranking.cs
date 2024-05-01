@@ -1,19 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Ranking : MonoBehaviour
 {
-    [SerializeField] int[] highScore;
+    [Header("スコア関係")]
+    int[] rankingScore = new int[10];
+    string[] rankingName = new string[10];
     int totalScore;
 
+    [Header("キャンバス関係")]
     [SerializeField] GameObject resultBoard;
     [SerializeField] GameObject nameBoard;
     [SerializeField] GameObject rankingBoard;
     [SerializeField] GameObject gameOverMenu;
 
-    public static bool isScore;
+    public static bool isScore; //trueの場合キャンバス表示
+
+    [Header("名前関係")]
+    public static string PlayerName;
+    public InputField nameInputField;
+
+    [Header("ランキング関係")]
+    TextAsset rankingCSV;
 
     enum RankingState
     {
@@ -33,6 +45,9 @@ public class Ranking : MonoBehaviour
         rankingBoard.SetActive(false);
         //gameOverMenu.SetActive(false);
 
+        PlayerName = null;
+
+        rankingSet();
     }
 
     // Update is called once per frame
@@ -60,13 +75,18 @@ public class Ranking : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Escape))
         {
             isScore = true;
+
+            for (int i = 0;i < rankingScore.Length;i++) 
+            {
+                Debug.Log(rankingScore[i]);
+                Debug.Log(rankingName[i]);
+            }
         }
 
     }
 
     void Result()
     {
-        //isScore = false;
         //totalScore = 0;     //スコア受け取り
         resultBoard.SetActive(true);
         rankingBoard.SetActive(false );
@@ -82,9 +102,18 @@ public class Ranking : MonoBehaviour
         resultBoard.SetActive(false);
         nameBoard.SetActive(true);
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if(Input.GetKey(KeyCode.Space))
         {
-            rankingState = RankingState.ranking;
+            PlayerName = nameInputField.text;
+        }
+
+        if (PlayerName != null)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                Debug.Log(PlayerName);
+                rankingState = RankingState.ranking;
+            }
         }
     }
 
@@ -101,6 +130,27 @@ public class Ranking : MonoBehaviour
 
     void gameMenu()
     {
+
+    }
+
+    void rankingSet()
+    {
+        rankingCSV = Resources.Load<TextAsset>("ranking");
+        List<string[]> rankingDate = new List<string[]>();
+        StringReader reader = new StringReader(rankingCSV.text);
+        
+        while (reader.Peek() != -1)
+        {
+            string line = reader.ReadLine();
+            rankingDate.Add(line.Split(','));
+        }
+
+        for (int i = 0; i < rankingScore.Length; i++) 
+        {
+            rankingScore[i] = int.Parse(rankingDate[i][1]);
+            rankingName[i] = rankingDate[i][0];
+        }
+
 
     }
 }
