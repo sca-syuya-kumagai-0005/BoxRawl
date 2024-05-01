@@ -27,6 +27,7 @@ public class ButtonManager : MonoBehaviour
     void Update()
     {
         SceneCheck();
+        Debug.Log(sceneCheck);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -84,6 +85,7 @@ public class ButtonManager : MonoBehaviour
     private IEnumerator SceneChanger()
     {
         sceneCheckBackGround.SetActive(false);
+        yield return new WaitForSeconds(0.5f);
         sceneChangeFlag = true;
         hole.SetActive(false);
         yield return new WaitForSeconds(1f);
