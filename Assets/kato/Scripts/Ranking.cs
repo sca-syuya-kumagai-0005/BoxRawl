@@ -24,8 +24,6 @@ public class Ranking : MonoBehaviour
     public static string PlayerName;
     public InputField nameInputField;
 
-    [Header("ƒ‰ƒ“ƒLƒ“ƒOŠÖŒW")]
-    TextAsset rankingCSV;
 
     enum RankingState
     {
@@ -47,7 +45,6 @@ public class Ranking : MonoBehaviour
 
         PlayerName = null;
 
-        rankingSet();
     }
 
     // Update is called once per frame
@@ -133,24 +130,4 @@ public class Ranking : MonoBehaviour
 
     }
 
-    void rankingSet()
-    {
-        rankingCSV = Resources.Load<TextAsset>("ranking");
-        List<string[]> rankingDate = new List<string[]>();
-        StringReader reader = new StringReader(rankingCSV.text);
-        
-        while (reader.Peek() != -1)
-        {
-            string line = reader.ReadLine();
-            rankingDate.Add(line.Split(','));
-        }
-
-        for (int i = 0; i < rankingScore.Length; i++) 
-        {
-            rankingScore[i] = int.Parse(rankingDate[i][1]);
-            rankingName[i] = rankingDate[i][0];
-        }
-
-
-    }
 }
