@@ -40,61 +40,65 @@ public class PlayerMove : MonoBehaviour
         JumpCount = 0;
         OnWall = false;
         Drop = false;
+        ButtonManager.sceneCheck = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //ƒWƒƒƒ“ƒv
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (ButtonManager.sceneCheck==false)
         {
-            if (JumpCount==0)
+            //ƒWƒƒƒ“ƒv
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                rb.velocity = new Vector3(0, JumpForce, 0);
+                if (JumpCount == 0)
+                {
+                    rb.velocity = new Vector3(0, JumpForce, 0);
+                }
+
+                JumpCount += 1;
+                OnGround = false;
             }
-            
-            JumpCount += 1;
-            OnGround = false;
-        }
-        //•Ç‚ß‚èž‚Ý–hŽ~
-        if(Input.GetKeyDown(KeyCode.A)|| Input.GetKeyDown(KeyCode.D))
-        {
-            OnWall = false;
-        }
-        //ˆÚ“®
-        if (Input.GetKey(KeyCode.A))
-        {
-            PlayerSkin.rota = 1;
-            if (OnWall == false)
+            //•Ç‚ß‚èž‚Ý–hŽ~
+            if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
             {
-                this.transform.position += new Vector3(-Speed * Time.deltaTime, 0, 0);
+                OnWall = false;
             }
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            PlayerSkin.rota = -1;
-            if (OnWall == false)
+            //ˆÚ“®
+            if (Input.GetKey(KeyCode.A))
             {
-                this.transform.position += new Vector3(Speed * Time.deltaTime, 0, 0);
+                PlayerSkin.rota = 1;
+                if (OnWall == false)
+                {
+                    this.transform.position += new Vector3(-Speed * Time.deltaTime, 0, 0);
+                }
             }
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            PlayerSkin.Rota = false;
-            PlayerSkin.rota = 0;
-            if (JumpCount > 0)
+            if (Input.GetKey(KeyCode.D))
             {
-                rb.velocity = new Vector3(0, -JumpForce * 2, 0);
-                Drop = true;
+                PlayerSkin.rota = -1;
+                if (OnWall == false)
+                {
+                    this.transform.position += new Vector3(Speed * Time.deltaTime, 0, 0);
+                }
             }
-        }
-        if (OnGround == false)
-        {
-            PlayerSkin.Rota = true;
-        }
-        else
-        {
-            PlayerSkin.Rota = false;
+            if (Input.GetKey(KeyCode.S))
+            {
+                PlayerSkin.Rota = false;
+                PlayerSkin.rota = 0;
+                if (JumpCount > 0)
+                {
+                    rb.velocity = new Vector3(0, -JumpForce * 2, 0);
+                    Drop = true;
+                }
+            }
+            if (OnGround == false)
+            {
+                PlayerSkin.Rota = true;
+            }
+            else
+            {
+                PlayerSkin.Rota = false;
+            }
         }
     }
 
@@ -105,6 +109,10 @@ public class PlayerMove : MonoBehaviour
             PlayerSkin.rota = 0;
             OnGround = true;
             JumpCount = 0;
+            if (Drop == true)
+            {
+                CameraMove.sway = true;
+            }
             Drop = false;
         }
         if (other.gameObject.CompareTag("Wall"))
