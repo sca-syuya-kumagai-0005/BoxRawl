@@ -11,7 +11,7 @@ public class PlayerSkin : MonoBehaviour
     void Start()
     {
         rota = 0;
-        speed = 1.5f;
+        speed = 750f;
     }
 
     // Update is called once per frame
@@ -19,7 +19,7 @@ public class PlayerSkin : MonoBehaviour
     {
         if(Rota==true)
         {
-            transform.Rotate(0, 0, speed*rota);
+            transform.Rotate(0, 0, speed*rota * Time.deltaTime);
         }
         if (Rota == false)
         {

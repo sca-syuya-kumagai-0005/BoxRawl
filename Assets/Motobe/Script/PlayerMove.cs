@@ -26,7 +26,7 @@ public class PlayerMove : MonoBehaviour
 
     private bool OnGround;
     private bool OnWall;
-    private bool Drop;
+    public static bool Drop;
     private float WallJumpCount;
 
     // Start is called before the first frame update
@@ -52,11 +52,7 @@ public class PlayerMove : MonoBehaviour
             {
                 rb.velocity = new Vector3(0, JumpForce, 0);
             }
-            else if (JumpCount==1) 
-            {
-                rb.velocity = new Vector3(0, -JumpForce*2, 0);
-                Drop = true;
-            }
+            
             JumpCount += 1;
             OnGround = false;
         }
@@ -71,7 +67,7 @@ public class PlayerMove : MonoBehaviour
             PlayerSkin.rota = 1;
             if (OnWall == false)
             {
-                this.transform.position += new Vector3(-Speed, 0, 0);
+                this.transform.position += new Vector3(-Speed * Time.deltaTime, 0, 0);
             }
         }
         if (Input.GetKey(KeyCode.D))
@@ -79,7 +75,16 @@ public class PlayerMove : MonoBehaviour
             PlayerSkin.rota = -1;
             if (OnWall == false)
             {
-                this.transform.position += new Vector3(Speed, 0, 0);
+                this.transform.position += new Vector3(Speed * Time.deltaTime, 0, 0);
+            }
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            PlayerSkin.rota = 0;
+            if (JumpCount > 0)
+            {
+                rb.velocity = new Vector3(0, -JumpForce * 2, 0);
+                Drop = true;
             }
         }
         if (OnGround == false)
@@ -108,6 +113,19 @@ public class PlayerMove : MonoBehaviour
         {
             OnWall = true;
             JumpCount = 0;
+        }
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            PlayerSkin.rota = 0;
+            PlayerSkin.Rota = false;
+            JumpCount = 0;
+        }
+    }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            JumpCount = 1;
         }
     }
 }
