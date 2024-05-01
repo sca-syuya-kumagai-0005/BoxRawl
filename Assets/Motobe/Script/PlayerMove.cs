@@ -80,6 +80,7 @@ public class PlayerMove : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.S))
         {
+            PlayerSkin.Rota = false;
             PlayerSkin.rota = 0;
             if (JumpCount > 0)
             {
@@ -106,13 +107,16 @@ public class PlayerMove : MonoBehaviour
             JumpCount = 0;
             Drop = false;
         }
+        if (other.gameObject.CompareTag("Wall"))
+        {
+            JumpCount = 0;
+        }
     }
     private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Wall"))
         {
             OnWall = true;
-            JumpCount = 0;
         }
         if (collision.gameObject.CompareTag("Ground"))
         {
@@ -124,6 +128,10 @@ public class PlayerMove : MonoBehaviour
     private void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Wall"))
+        {
+            JumpCount = 1;
+        }
+        if (collision.gameObject.CompareTag("Ground"))
         {
             JumpCount = 1;
         }
