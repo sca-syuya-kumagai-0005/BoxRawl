@@ -70,7 +70,10 @@ public class PlayerMove : MonoBehaviour
                 PlayerSkin.rota = 1;
                 if (OnWall == false)
                 {
-                    this.transform.position += new Vector3(-Speed * Time.deltaTime, 0, 0);
+                    if (Drop==false)
+                    {
+                        this.transform.position += new Vector3(-Speed * Time.deltaTime, 0, 0);
+                    }
                 }
             }
             if (Input.GetKey(KeyCode.D))
@@ -78,7 +81,10 @@ public class PlayerMove : MonoBehaviour
                 PlayerSkin.rota = -1;
                 if (OnWall == false)
                 {
-                    this.transform.position += new Vector3(Speed * Time.deltaTime, 0, 0);
+                    if (Drop == false)
+                    {
+                        this.transform.position += new Vector3(Speed * Time.deltaTime, 0, 0);
+                    }
                 }
             }
             if (Input.GetKey(KeyCode.S))
@@ -90,14 +96,6 @@ public class PlayerMove : MonoBehaviour
                     rb.velocity = new Vector3(0, -JumpForce * 2, 0);
                     Drop = true;
                 }
-            }
-            if (OnGround == false)
-            {
-                PlayerSkin.Rota = true;
-            }
-            else
-            {
-                PlayerSkin.Rota = false;
             }
         }
     }
@@ -139,10 +137,12 @@ public class PlayerMove : MonoBehaviour
         if (collision.gameObject.CompareTag("Wall"))
         {
             JumpCount = 1;
+            PlayerSkin.Rota = true;
         }
         if (collision.gameObject.CompareTag("Ground"))
         {
             JumpCount = 1;
+            PlayerSkin.Rota = true;
         }
     }
 }
