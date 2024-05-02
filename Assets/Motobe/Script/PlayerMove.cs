@@ -24,7 +24,6 @@ public class PlayerMove : MonoBehaviour
 
     private int JumpCount;
 
-    private bool OnGround;
     private bool OnWall;
     public static bool Drop;
     private float WallJumpCount;
@@ -55,9 +54,6 @@ public class PlayerMove : MonoBehaviour
                 {
                     rb.velocity = new Vector3(0, JumpForce, 0);
                 }
-
-                JumpCount += 1;
-                OnGround = false;
             }
             //•Ç‚ß‚èž‚Ý–hŽ~
             if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
@@ -87,11 +83,11 @@ public class PlayerMove : MonoBehaviour
                     }
                 }
             }
-            if (Input.GetKey(KeyCode.S))
+            if (Input.GetKeyDown(KeyCode.S))
             {
                 PlayerSkin.Rota = false;
                 PlayerSkin.rota = 0;
-                if (JumpCount > 0)
+                if (JumpCount >= 1)
                 {
                     rb.velocity = new Vector3(0, -JumpForce * 2, 0);
                     Drop = true;
@@ -105,7 +101,6 @@ public class PlayerMove : MonoBehaviour
         if (other.gameObject.CompareTag("Ground"))
         {
             PlayerSkin.rota = 0;
-            OnGround = true;
             JumpCount = 0;
             if (Drop == true)
             {
@@ -115,6 +110,7 @@ public class PlayerMove : MonoBehaviour
         }
         if (other.gameObject.CompareTag("Wall"))
         {
+            PlayerSkin.rota = 0;
             JumpCount = 0;
         }
     }
@@ -138,6 +134,7 @@ public class PlayerMove : MonoBehaviour
         {
             JumpCount = 1;
             PlayerSkin.Rota = true;
+            OnWall = false;
         }
         if (collision.gameObject.CompareTag("Ground"))
         {
