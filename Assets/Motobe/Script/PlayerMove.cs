@@ -14,7 +14,7 @@ public class PlayerMove : MonoBehaviour
     public GameObject DropObject;
 
     //体力表示用のオブジェクト
-    public GameObject HpObject;
+    public GameObject[] HpObject;
 
     //ジャンプの高さ関係
     [SerializeField] public float DefaultJumpForce;
@@ -59,6 +59,8 @@ public class PlayerMove : MonoBehaviour
         Speed = DefaultSpeed + PlusSpeed;
         Size = DefaultSize + PlusSize;
         Hp = DefaultHp + PlusHp;
+
+        for(int i=0;i<5;)
 
         ButtonManager.sceneCheck = false;
     }
@@ -220,13 +222,15 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    private void OnTriggerStay2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
             if (!Drop)
             {
                 Hp -= 1;
+                Debug.Log(Hp);
+
             }
         }
     }
