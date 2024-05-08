@@ -25,6 +25,7 @@ public class PlayerMove : MonoBehaviour
     private int JumpCount;
 
     private bool OnWall;
+    private bool DoubleWall;
     public static bool Drop;
     private float WallJumpCount;
 
@@ -39,56 +40,78 @@ public class PlayerMove : MonoBehaviour
         JumpCount = 0;
         OnWall = false;
         Drop = false;
+        DoubleWall = false;
         ButtonManager.sceneCheck = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (ButtonManager.sceneCheck==false)
+        //Debug.Log(DoubleWall);
+        if (!ButtonManager.sceneCheck)
         {
             //ジャンプ
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 if (JumpCount == 0)
                 {
-                    rb.velocity = new Vector3(0, JumpForce, 0);
+                    //壁での連続ジャンプ防止
+                    if (OnWall)
+                    {
+                        if (!DoubleWall)
+                        {
+                            rb.velocity = new Vector3(0, JumpForce, 0);
+                            DoubleWall = true;
+                        }
+                    }
+                    else
+                    {
+                        rb.velocity = new Vector3(0, JumpForce, 0);
+                    }
                 }
+                
             }
             //壁めり込み防止
             if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
             {
                 OnWall = false;
             }
-            //移動
+            //左移動
             if (Input.GetKey(KeyCode.A))
             {
                 PlayerSkin.rota = 1;
-                if (OnWall == false)
+                //壁に触れたまま移動しない
+                if (!OnWall)
                 {
-                    if (Drop==false)
+                    //ヒップドロップ中に移動しない
+                    if (!Drop)
                     {
                         this.transform.position += new Vector3(-Speed * Time.deltaTime, 0, 0);
                     }
                 }
             }
+            //右移動
             if (Input.GetKey(KeyCode.D))
             {
                 PlayerSkin.rota = -1;
-                if (OnWall == false)
+                //壁に触れたまま移動しない
+                if (!OnWall)
                 {
-                    if (Drop == false)
+                    //ヒップドロップ中に移動しない
+                    if (!Drop)
                     {
                         this.transform.position += new Vector3(Speed * Time.deltaTime, 0, 0);
                     }
                 }
             }
+            //ヒップドロップ
             if (Input.GetKeyDown(KeyCode.S))
             {
-                PlayerSkin.Rota = false;
-                PlayerSkin.rota = 0;
-                if (JumpCount >= 1)
+                //
+                if (JumpCount == 1)
                 {
+                    PlayerSkin.Rota = false;
+                    PlayerSkin.rota = 0;
                     rb.velocity = new Vector3(0, -JumpForce * 2, 0);
                     Drop = true;
                 }
@@ -100,18 +123,18 @@ public class PlayerMove : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Ground"))
         {
-            PlayerSkin.rota = 0;
-            JumpCount = 0;
-            if (Drop == true)
+            if (Drop)
             {
                 CameraMove.sway = true;
             }
             Drop = false;
         }
-        if (other.gameObject.CompareTag("Wall"))
+        if(other.gameObject.CompareTag("Button"))
         {
-            PlayerSkin.rota = 0;
-            JumpCount = 0;
+            if (Drop)
+            {
+                CameraMove.sway = true;
+            }
         }
     }
     private void OnCollisionStay2D(Collision2D collision)
@@ -119,9 +142,11 @@ public class PlayerMove : MonoBehaviour
         if (collision.gameObject.CompareTag("Wall"))
         {
             OnWall = true;
+            PlayerSkin.rota = 0;
             PlayerSkin.Rota = false;
+            JumpCount = 0;
         }
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.CompareTag("Ground")|| collision.gameObject.CompareTag("Button"))
         {
             PlayerSkin.rota = 0;
             PlayerSkin.Rota = false;
@@ -135,8 +160,9 @@ public class PlayerMove : MonoBehaviour
             JumpCount = 1;
             PlayerSkin.Rota = true;
             OnWall = false;
+            DoubleWall = false;
         }
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.CompareTag("Ground")|| collision.gameObject.CompareTag("Button"))
         {
             JumpCount = 1;
             PlayerSkin.Rota = true;
