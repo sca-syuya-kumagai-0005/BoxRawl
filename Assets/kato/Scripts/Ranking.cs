@@ -8,8 +8,6 @@ using UnityEngine.UI;
 public class Ranking : MonoBehaviour
 {
     [Header("スコア関係")]
-    int[] rankingScore = new int[10];
-    string[] rankingName = new string[10];
     int totalScore;
 
     [Header("キャンバス関係")]
@@ -23,7 +21,6 @@ public class Ranking : MonoBehaviour
     [Header("名前関係")]
     public static string PlayerName;
     public InputField nameInputField;
-
 
     enum RankingState
     {
@@ -45,6 +42,7 @@ public class Ranking : MonoBehaviour
 
         PlayerName = null;
 
+        RankingManager.rankingUpdate = false;
     }
 
     // Update is called once per frame
@@ -72,25 +70,29 @@ public class Ranking : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Escape))
         {
             isScore = true;
-
-            for (int i = 0;i < rankingScore.Length;i++) 
-            {
-                Debug.Log(rankingScore[i]);
-                Debug.Log(rankingName[i]);
-            }
         }
 
     }
 
     void Result()
     {
-        //totalScore = 0;     //スコア受け取り
+        totalScore = 20;     //スコア受け取り
+        RankingManager.myScore = totalScore;
         resultBoard.SetActive(true);
         rankingBoard.SetActive(false );
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            rankingState = RankingState.name;
+            if (totalScore > RankingManager.rankingScore[9]
+                || RankingManager.rankingScore[9] == null)
+            {
+                rankingState = RankingState.name;
+            }
+            else
+            {
+                RankingManager.rankingUpdate = true;
+                rankingState = RankingState.ranking;
+            }
         }
     }
 
@@ -99,7 +101,7 @@ public class Ranking : MonoBehaviour
         resultBoard.SetActive(false);
         nameBoard.SetActive(true);
 
-        if(Input.GetKey(KeyCode.Space))
+        if(Input.GetKey(KeyCode.P))
         {
             PlayerName = nameInputField.text;
         }
@@ -109,6 +111,8 @@ public class Ranking : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 Debug.Log(PlayerName);
+                RankingManager.myName = PlayerName;
+                RankingManager.rankingUpdate = true;
                 rankingState = RankingState.ranking;
             }
         }
