@@ -46,11 +46,12 @@ public class ButtonManager : MonoBehaviour
                         }
                         break;
                 }
+                Player.transform.position = this.gameObject.transform.position + new Vector3(0, 0.3f, 0);//0.3はボタンサイズ
                 sceneName.text = thisSceneName;
                 PlayerMove.Drop = false;
             }
         }
-        Player.transform.position = this.gameObject.transform.position + new Vector3(0, 0.3f, 0);//0.3はボタンサイズ
+      
     }
 
     
