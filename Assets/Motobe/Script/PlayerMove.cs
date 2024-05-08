@@ -107,7 +107,7 @@ public class PlayerMove : MonoBehaviour
             //ヒップドロップ
             if (Input.GetKeyDown(KeyCode.S))
             {
-                //
+                //空中にいるとき
                 if (JumpCount == 1)
                 {
                     PlayerSkin.Rota = false;
@@ -121,8 +121,10 @@ public class PlayerMove : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
+        //Groundにふれたとき
         if (other.gameObject.CompareTag("Ground"))
         {
+            //ヒップドロップで触れたらカメラを揺らす
             if (Drop)
             {
                 CameraMove.sway = true;
@@ -139,6 +141,7 @@ public class PlayerMove : MonoBehaviour
     }
     private void OnCollisionStay2D(Collision2D collision)
     {
+        //壁に触れている間
         if (collision.gameObject.CompareTag("Wall"))
         {
             OnWall = true;
@@ -146,6 +149,7 @@ public class PlayerMove : MonoBehaviour
             PlayerSkin.Rota = false;
             JumpCount = 0;
         }
+        //地面に触れている間
         if (collision.gameObject.CompareTag("Ground")|| collision.gameObject.CompareTag("Button"))
         {
             PlayerSkin.rota = 0;
@@ -155,6 +159,7 @@ public class PlayerMove : MonoBehaviour
     }
     private void OnCollisionExit2D(Collision2D collision)
     {
+        //壁から離れたとき
         if (collision.gameObject.CompareTag("Wall"))
         {
             JumpCount = 1;
