@@ -9,6 +9,7 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private GameObject hole;
     [SerializeField] private GameObject sceneGround;
     [SerializeField] private GameObject sceneCheckBackGround;
+    [SerializeField] private GameObject Player;
     [SerializeField] private Text sceneName;
     private bool sceneChangeFlag;
     private string yesOrNo;
@@ -46,15 +47,16 @@ public class ButtonManager : MonoBehaviour
                         break;
                 }
                 sceneName.text = thisSceneName;
+                PlayerMove.Drop = false;
             }
         }
-
-        else
-        {
-            Debug.Log("物体が見つかりません");
-        }
+        Player.transform.position = this.gameObject.transform.position + new Vector3(0, 0.3f, 0);//0.3はボタンサイズ
     }
 
+    
+
+    //選択したときにそのシーンに移動するかどうかをチェックする
+    //ステータス割り振りの時にはこのシーンはスキップする
     private void SceneCheck()
     {
         if(sceneCheck)
@@ -82,6 +84,7 @@ public class ButtonManager : MonoBehaviour
     }
 
 
+    //シーン切り替え時の演出（仮）
     private IEnumerator SceneChanger()
     {
         sceneCheckBackGround.SetActive(false);
