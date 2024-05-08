@@ -32,9 +32,9 @@ public class PlayerMove : MonoBehaviour
     private float Size;
 
     //‘Ì—ÍŠÖŒW
-    private float DefaultHp=2;
-    [SerializeField] public float PlusHp;
-    private float Hp;
+    private int DefaultHp=2;
+    [SerializeField] public int PlusHp;
+    private int Hp;
 
     //‹ó’†‚É‹‚é‚©‚Ì”»’è
     private int JumpCount;
@@ -60,7 +60,14 @@ public class PlayerMove : MonoBehaviour
         Size = DefaultSize + PlusSize;
         Hp = DefaultHp + PlusHp;
 
-        for(int i=0;i<5;)
+        for(int i = 0; i < 5; i++)
+        {
+            HpObject[i].SetActive(false);
+        }
+        for (int i = 0; i < Hp; i++)
+        {
+            HpObject[i].SetActive(true);
+        }
 
         ButtonManager.sceneCheck = false;
     }
@@ -228,9 +235,14 @@ public class PlayerMove : MonoBehaviour
         {
             if (!Drop)
             {
-                Hp -= 1;
-                Debug.Log(Hp);
+                if (!PlayerSkin.blink)
+                {
+                    HpObject[Hp - 1].SetActive(false);
+                    Hp -= 1;
+                    PlayerSkin.blink = true;
+                }
 
+                //HP‚ª0‚É‚È‚Á‚½‚ç
             }
         }
     }
