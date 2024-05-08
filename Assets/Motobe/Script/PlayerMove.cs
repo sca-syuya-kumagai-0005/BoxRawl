@@ -4,43 +4,62 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
+    //Rigidbody
     private Rigidbody2D rb;
 
+    //ジャンプできるか確認するためのオブジェクト
+    public GameObject JumpChecker;
+
+    //ヒップドロップで敵を倒す判定のオブジェクト
+    public GameObject DropObject;
+
+    //体力表示用のオブジェクト
+    public GameObject HpObject;
+
+    //ジャンプの高さ関係
     [SerializeField] public float DefaultJumpForce;
     [SerializeField] public float PlusJumpForce;
     private float JumpForce;
 
+    //速さ関係
     [SerializeField] public float DefaultSpeed;
     [SerializeField] public float PlusSpeed;
     private float Speed;
 
+    //大きさ関係(ステージの構成的にヒップドロップの範囲強化のほうが良さそうと提案)
     [SerializeField] public float DefaultSize;
     [SerializeField] public float PlusSize;
     private float Size;
 
+    //体力関係
     private float DefaultHp=2;
     [SerializeField] public float PlusHp;
     private float Hp;
 
+    //空中に居るかの判定
     private int JumpCount;
 
+    //壁に触れているかの判定
     private bool OnWall;
+
+    //連続壁ジャンプをしないようにする
     private bool DoubleWall;
+
+    //ヒップドロップをしているかの判定
     public static bool Drop;
-    private float WallJumpCount;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        DropObject.SetActive(false);
+
+        //ステータスを入力
         JumpForce = DefaultJumpForce + PlusJumpForce;
         Speed = DefaultSpeed + PlusSpeed;
         Size = DefaultSize + PlusSize;
         Hp = DefaultHp + PlusHp;
-        JumpCount = 0;
-        OnWall = false;
-        Drop = false;
-        DoubleWall = false;
+
         ButtonManager.sceneCheck = false;
     }
 
@@ -48,6 +67,7 @@ public class PlayerMove : MonoBehaviour
     void Update()
     {
         //Debug.Log(DoubleWall);
+
         if (!ButtonManager.sceneCheck)
         {
             //ジャンプ
@@ -116,6 +136,31 @@ public class PlayerMove : MonoBehaviour
                     Drop = true;
                 }
             }
+            //ジャンプ可能か確認用オブジェクトの表示非表示
+            if (JumpCount == 0)
+            {
+                if (!DoubleWall)
+                {
+                    JumpChecker.SetActive(true);
+                }
+                else
+                {
+                    JumpChecker.SetActive(false);
+                }
+            }
+            else
+            {
+                JumpChecker.SetActive(false);
+            }
+        }
+        //ヒップドロップ中の判定
+        if (Drop)
+        {
+            DropObject.SetActive(true);
+        }
+        else
+        {
+            DropObject.SetActive(false);
         }
     }
 
@@ -129,7 +174,6 @@ public class PlayerMove : MonoBehaviour
             {
                 CameraMove.sway = true;
             }
-            Drop = false;
         }
         if(other.gameObject.CompareTag("Button"))
         {
@@ -152,6 +196,7 @@ public class PlayerMove : MonoBehaviour
         //地面に触れている間
         if (collision.gameObject.CompareTag("Ground")|| collision.gameObject.CompareTag("Button"))
         {
+            Drop = false;
             PlayerSkin.rota = 0;
             PlayerSkin.Rota = false;
             JumpCount = 0;
@@ -167,10 +212,22 @@ public class PlayerMove : MonoBehaviour
             OnWall = false;
             DoubleWall = false;
         }
+        //地面から離れたとき
         if (collision.gameObject.CompareTag("Ground")|| collision.gameObject.CompareTag("Button"))
         {
             JumpCount = 1;
             PlayerSkin.Rota = true;
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            if (!Drop)
+            {
+                Hp -= 1;
+            }
         }
     }
 }
