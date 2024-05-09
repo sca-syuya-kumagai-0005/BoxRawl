@@ -7,6 +7,9 @@ public class PlayerMove : MonoBehaviour
     //Rigidbody
     private Rigidbody2D rb;
 
+    //プレイヤーの見た目のオブジェクト
+    public GameObject PlayerSkinObject;
+
     //ジャンプできるか確認するためのオブジェクト
     public GameObject JumpChecker;
 
@@ -48,11 +51,27 @@ public class PlayerMove : MonoBehaviour
     //ヒップドロップをしているかの判定
     public static bool Drop;
 
+    //ダメージを受けているかの確認
+    private bool blink;
+    private bool blinkCheck;
+    float blinkCount;
+
+    //ダメージを受けた後の無敵時間
+    //invincibleTime*0.05秒無敵時間(invincibleTime==8なら0.4秒)　ステータスに入れてもいいかも
+    public int invincibleTime;
+    int invincibleTimeCheck;
+
     // Start is called before the first frame update
     void Start()
     {
+        blink = false;
+        blinkCheck = false;
         rb = GetComponent<Rigidbody2D>();
+        PlayerSkinObject.SetActive(true);
         DropObject.SetActive(false);
+        blinkCount = 0;
+        invincibleTimeCheck = 0;
+
 
         //ステータスを入力
         JumpForce = DefaultJumpForce + PlusJumpForce;
@@ -171,6 +190,43 @@ public class PlayerMove : MonoBehaviour
         {
             DropObject.SetActive(false);
         }
+
+        //ダメージを受けた時の点滅
+        if (blink)
+        {
+            //点滅
+            if (blinkCount>0.05f)
+            {
+                if (blinkCheck)
+                {
+                    PlayerSkinObject.SetActive(true);
+                    blinkCheck = false;
+                    invincibleTimeCheck++;
+                }
+                else
+                {
+                    PlayerSkinObject.SetActive(false);
+                    blinkCheck = true;
+                    invincibleTimeCheck++;
+                }
+                if (invincibleTimeCheck >= invincibleTime)
+                {
+                    blink = false;
+                    invincibleTimeCheck = 0;
+                }
+                blinkCount = 0;
+            }
+            else
+            {
+                blinkCount += Time.deltaTime;
+            }
+        }
+        if (!blink)
+        {
+            PlayerSkinObject.SetActive(true);
+            blinkCount = 0;
+
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -178,6 +234,7 @@ public class PlayerMove : MonoBehaviour
         //Groundにふれたとき
         if (other.gameObject.CompareTag("Ground"))
         {
+            DoubleWall = false;
             //ヒップドロップで触れたらカメラを揺らす
             if (Drop)
             {
@@ -229,20 +286,25 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerStay2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
             if (!Drop)
             {
-                if (!PlayerSkin.blink)
+                if (!blink)
                 {
-                    HpObject[Hp - 1].SetActive(false);
-                    Hp -= 1;
-                    PlayerSkin.blink = true;
+                    if (Hp > 0)
+                    {
+                        HpObject[Hp - 1].SetActive(false);
+                        Hp -= 1;
+                        blink = true;
+                    }
+                    else
+                    {
+                        //死亡演出
+                    }
                 }
-
-                //HPが0になったら
             }
         }
     }
