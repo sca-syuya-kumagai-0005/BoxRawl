@@ -5,7 +5,6 @@ using UnityEngine;
 public class PlayerSkin : MonoBehaviour
 {
     public static bool Rota;
-    
     public static int rota;
     float speed;
     // Start is called before the first frame update
