@@ -124,7 +124,6 @@ public class EnemyDefault : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Ground"))
         {
-            Debug.Log(1);
             transform.position = new Vector3(posx, posy-0.2f);
             Rota = false;
         }

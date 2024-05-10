@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using DG.Tweening;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -61,6 +63,11 @@ public class PlayerMove : MonoBehaviour
     public int invincibleTime;
     int invincibleTimeCheck;
 
+    //スタート処理
+    bool startRota;
+    public Image[] Count;
+    public GameObject EnemySpawnner;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -71,7 +78,8 @@ public class PlayerMove : MonoBehaviour
         DropObject.SetActive(false);
         blinkCount = 0;
         invincibleTimeCheck = 0;
-
+        startRota = false;
+        EnemySpawnner.SetActive(false);
 
         //ステータスを入力
         JumpForce = DefaultJumpForce + PlusJumpForce;
@@ -98,135 +106,139 @@ public class PlayerMove : MonoBehaviour
 
         if (!ButtonManager.sceneCheck)
         {
-            //ジャンプ
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (startRota)
             {
-                if (JumpCount == 0)
+                //ジャンプ
+                if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    //壁での連続ジャンプ防止
-                    if (OnWall)
+                    if (JumpCount == 0)
                     {
-                        if (!DoubleWall)
+                        //壁での連続ジャンプ防止
+                        if (OnWall)
+                        {
+                            if (!DoubleWall)
+                            {
+                                rb.velocity = new Vector3(0, JumpForce, 0);
+                                DoubleWall = true;
+                            }
+                        }
+                        else
                         {
                             rb.velocity = new Vector3(0, JumpForce, 0);
-                            DoubleWall = true;
                         }
+                    }
+
+                }
+                //壁めり込み防止
+                if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
+                {
+                    OnWall = false;
+                }
+                //左移動
+                if (Input.GetKey(KeyCode.A))
+                {
+                    PlayerSkin.rota = 1;
+                    //壁に触れたまま移動しない
+                    if (!OnWall)
+                    {
+                        //ヒップドロップ中に移動しない
+                        if (!Drop)
+                        {
+                            this.transform.position += new Vector3(-Speed * Time.deltaTime, 0, 0);
+                        }
+                    }
+                }
+                //右移動
+                if (Input.GetKey(KeyCode.D))
+                {
+                    PlayerSkin.rota = -1;
+                    //壁に触れたまま移動しない
+                    if (!OnWall)
+                    {
+                        //ヒップドロップ中に移動しない
+                        if (!Drop)
+                        {
+                            this.transform.position += new Vector3(Speed * Time.deltaTime, 0, 0);
+                        }
+                    }
+                }
+                //ヒップドロップ
+                if (Input.GetKeyDown(KeyCode.S))
+                {
+                    //空中にいるとき
+
+                    if (JumpCount == 1)
+                    {
+                        PlayerSkin.Rota = false;
+                        PlayerSkin.rota = 0;
+                        rb.velocity = new Vector3(0, -JumpForce * 2, 0);
+                        Drop = true;
+                    }
+                }
+                //ジャンプ可能か確認用オブジェクトの表示非表示
+                if (JumpCount == 0)
+                {
+                    if (!DoubleWall)
+                    {
+                        JumpChecker.SetActive(true);
                     }
                     else
                     {
-                        rb.velocity = new Vector3(0, JumpForce, 0);
+                        JumpChecker.SetActive(false);
                     }
-                }
-                
-            }
-            //壁めり込み防止
-            if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
-            {
-                OnWall = false;
-            }
-            //左移動
-            if (Input.GetKey(KeyCode.A))
-            {
-                PlayerSkin.rota = 1;
-                //壁に触れたまま移動しない
-                if (!OnWall)
-                {
-                    //ヒップドロップ中に移動しない
-                    if (!Drop)
-                    {
-                        this.transform.position += new Vector3(-Speed * Time.deltaTime, 0, 0);
-                    }
-                }
-            }
-            //右移動
-            if (Input.GetKey(KeyCode.D))
-            {
-                PlayerSkin.rota = -1;
-                //壁に触れたまま移動しない
-                if (!OnWall)
-                {
-                    //ヒップドロップ中に移動しない
-                    if (!Drop)
-                    {
-                        this.transform.position += new Vector3(Speed * Time.deltaTime, 0, 0);
-                    }
-                }
-            }
-            //ヒップドロップ
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                //空中にいるとき
-                if (JumpCount == 1)
-                {
-                    PlayerSkin.Rota = false;
-                    PlayerSkin.rota = 0;
-                    rb.velocity = new Vector3(0, -JumpForce * 2, 0);
-                    Drop = true;
-                }
-            }
-            //ジャンプ可能か確認用オブジェクトの表示非表示
-            if (JumpCount == 0)
-            {
-                if (!DoubleWall)
-                {
-                    JumpChecker.SetActive(true);
                 }
                 else
                 {
                     JumpChecker.SetActive(false);
                 }
             }
+            //ヒップドロップ中の判定
+            if (Drop)
+            {
+                DropObject.SetActive(true);
+            }
             else
             {
-                JumpChecker.SetActive(false);
+                DropObject.SetActive(false);
             }
-        }
-        //ヒップドロップ中の判定
-        if (Drop)
-        {
-            DropObject.SetActive(true);
-        }
-        else
-        {
-            DropObject.SetActive(false);
-        }
 
-        //ダメージを受けた時の点滅
-        if (blink)
-        {
-            //点滅
-            if (blinkCount>0.05f)
+            //ダメージを受けた時の点滅
+            if (blink)
             {
-                if (blinkCheck)
+                //点滅
+                if (blinkCount > 0.05f)
                 {
-                    PlayerSkinObject.SetActive(true);
-                    blinkCheck = false;
-                    invincibleTimeCheck++;
+                    if (blinkCheck)
+                    {
+                        PlayerSkinObject.SetActive(true);
+                        blinkCheck = false;
+                        invincibleTimeCheck++;
+                    }
+                    else
+                    {
+                        PlayerSkinObject.SetActive(false);
+                        blinkCheck = true;
+                        invincibleTimeCheck++;
+                    }
+                    if (invincibleTimeCheck >= invincibleTime)
+                    {
+                        blink = false;
+                        invincibleTimeCheck = 0;
+                    }
+                    blinkCount = 0;
                 }
                 else
                 {
-                    PlayerSkinObject.SetActive(false);
-                    blinkCheck = true;
-                    invincibleTimeCheck++;
+                    blinkCount += Time.deltaTime;
                 }
-                if (invincibleTimeCheck >= invincibleTime)
-                {
-                    blink = false;
-                    invincibleTimeCheck = 0;
-                }
+            }
+            if (!blink)
+            {
+                PlayerSkinObject.SetActive(true);
                 blinkCount = 0;
             }
-            else
-            {
-                blinkCount += Time.deltaTime;
-            }
         }
-        if (!blink)
-        {
-            PlayerSkinObject.SetActive(true);
-            blinkCount = 0;
-
-        }
+            
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -234,6 +246,14 @@ public class PlayerMove : MonoBehaviour
         //Groundにふれたとき
         if (other.gameObject.CompareTag("Ground"))
         {
+            if (!startRota)
+            {
+                PlayerSkin.Rota = false;
+                StartCount();
+                //Time.timeScale = 0;
+                
+                
+            }
             DoubleWall = false;
             //ヒップドロップで触れたらカメラを揺らす
             if (Drop)
@@ -307,5 +327,43 @@ public class PlayerMove : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void StartCount()
+    {
+        Debug.Log("a");
+        var sequence = DOTween.Sequence();
+        var img3 = Count[3];
+        var c3 = img3.color;
+        c3.a = 0.0f;
+        img3.color = c3;
+        var img2 = Count[2];
+        var c2 = img2.color;
+        c2.a = 0.0f;
+        img2.color = c2;
+        var img1 = Count[1];
+        var c1 = img1.color;
+        c1.a = 0.0f;
+        img1.color = c1;
+        var imgGo = Count[0];
+        var cGo = imgGo.color;
+        cGo.a = 0.0f;
+        imgGo.color = cGo;
+        sequence.Append(DOTween.ToAlpha(() => img3.color, color => img3.color = color, 1, 0.25f));
+        sequence.Append(DOTween.ToAlpha(() => img3.color, color => img3.color = color, 0, 0.25f));
+        sequence.Append(DOTween.ToAlpha(() => img2.color, color => img2.color = color, 1, 0.25f));
+        sequence.Append(DOTween.ToAlpha(() => img2.color, color => img2.color = color, 0, 0.25f));
+        sequence.Append(DOTween.ToAlpha(() => img1.color, color => img1.color = color, 1, 0.25f));
+        sequence.Append(DOTween.ToAlpha(() => img1.color, color => img1.color = color, 0, 0.25f));
+        sequence.Append(DOTween.ToAlpha(() => imgGo.color, color => imgGo.color = color, 1, 0.25f));
+        sequence.Append(DOTween.ToAlpha(() => imgGo.color, color => imgGo.color = color, 0, 0.25f));
+        sequence.AppendCallback(() => StartEnd());
+    }
+
+    public void StartEnd()
+    {
+        //Time.timeScale = 1;
+        startRota = true;
+        EnemySpawnner.SetActive(true);
     }
 }

@@ -10,7 +10,8 @@ public class PlayerSkin : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        rota = 0;
+        rota = -1;
+        Rota = true;
         speed = 750f;
     }
 
