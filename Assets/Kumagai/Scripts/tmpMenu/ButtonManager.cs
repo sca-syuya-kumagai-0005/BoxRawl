@@ -45,6 +45,11 @@ public class ButtonManager : MonoBehaviour
                             thisSceneName = "メインゲーム";
                         }
                         break;
+                    case "Title":
+                        {
+                            thisSceneName = "Title";
+                        }
+                        break;
                 }
                 Player.transform.position = this.gameObject.transform.position + new Vector3(0, 0.3f, 0);//0.3はボタンサイズ
                 sceneName.text = thisSceneName;
@@ -97,6 +102,6 @@ public class ButtonManager : MonoBehaviour
         this.gameObject.transform.GetComponent<SpriteRenderer>().color=new Color(0,0,0,0);  
         this.gameObject.transform.GetComponent<BoxCollider2D>().isTrigger = true;
         yield return new WaitForSeconds(2f);
-        SceneManager.LoadScene(this.gameObject.name);
+        SceneManager.LoadScene(thisSceneName);
     }
 }
