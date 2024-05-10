@@ -149,24 +149,22 @@ public class EnemyDefault : MonoBehaviour
             Debug.Log(1);
             transform.position = new Vector3(posx, posy - 0.2f);
             Rota = false;
-
-
-            if (other.gameObject.CompareTag("Wall"))
+        }
+        if (other.gameObject.CompareTag("Wall"))
+        {
+            if (EnemyCheck == 1 || EnemyCheck == 2 || EnemyCheck == 3)
             {
-                if (EnemyCheck == 1 || EnemyCheck == 2 || EnemyCheck == 3)
-                {
-                    rb.velocity = new Vector3(0, 20, 0);
-                    OnGround = false;
-                    speed += 2;
-                }
-                if (right == false)
-                {
-                    right = true;
-                }
-                else
-                {
-                    right = false;
-                }
+                rb.velocity = new Vector3(0, 20, 0);
+                OnGround = false;
+                speed += 2;
+            }
+            if (right == false)
+            {
+                right = true;
+            }
+            else
+            {
+                right = false;
             }
         }
     }
