@@ -9,6 +9,8 @@ public class CameraManager : MonoBehaviour
     [SerializeField]
     private float jumpCameraRevision;
     private float tmpRevision;
+    [SerializeField]
+    private bool OnGround = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,7 +25,7 @@ public class CameraManager : MonoBehaviour
         {
            jumpCameraRevision = 1;
         }
-        else
+        else if(!OnGround)
         {
             jumpCameraRevision = tmpRevision;
         }
@@ -32,9 +34,13 @@ public class CameraManager : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        
+    }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
         if(collision.gameObject.tag=="Ground")
         {
-            jumpCameraRevision = 1;
+            OnGround=false;
         }
     }
 }
