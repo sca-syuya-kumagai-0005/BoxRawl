@@ -17,14 +17,10 @@ public class UnGravityEnemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        GetVec();
+
     }
 
     
-    void GetVec()
-    {
-        Vector3 target=m_target.transform.position-this.gameObject.transform.position;//EnmeyからPlayerへのベクトル
-        target=target.normalized;//ベクトルの正規化
-        this.transform.position += target * speed*Time.deltaTime;
-    }
+   
+   
 }

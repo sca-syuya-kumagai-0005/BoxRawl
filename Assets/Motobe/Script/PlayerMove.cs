@@ -362,7 +362,6 @@ public class PlayerMove : MonoBehaviour
 
     public void StartEnd()
     {
-        //Time.timeScale = 1;
         startRota = true;
         EnemySpawnner.SetActive(true);
     }

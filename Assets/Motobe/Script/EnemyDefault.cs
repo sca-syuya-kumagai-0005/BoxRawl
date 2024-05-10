@@ -21,6 +21,7 @@ public class EnemyDefault : MonoBehaviour
     bool Jump;
 
     public GameObject EnemySkin;
+    private GameObject player;
 
     // Start is called before the first frame update
     void Start()
@@ -31,7 +32,12 @@ public class EnemyDefault : MonoBehaviour
         dir = 1;
         Jump = false;
         defaultSpeed = speed;
-        int random = Random.Range(0, 4);
+        int random = Random.Range(0, 5);
+        player=GameObject.Find("Player").gameObject;
+        if(player!=null )
+        {
+            Debug.Log(player);
+        }
         EnemyCheck = random;
         Rota = true;
     }
@@ -39,11 +45,15 @@ public class EnemyDefault : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        posy = transform.position.y;
-        posx = transform.position.x;
-        posx += speed * Time.deltaTime*dir;
-        transform.position = new Vector3(posx, posy);
-        if (OnGround == false)
+        if(EnemyCheck!=4)
+        {
+            posy = transform.position.y;
+            posx = transform.position.x;
+            posx += speed * Time.deltaTime * dir;
+            transform.position = new Vector3(posx, posy);
+        }
+      
+        if (OnGround == false&&EnemyCheck!=4)
         {
             Vector2 myGravity = new Vector2(0, -9.81f*200*Time.deltaTime);
             rb.AddForce(myGravity);
@@ -72,8 +82,19 @@ public class EnemyDefault : MonoBehaviour
         {
             EnemySkin.transform.rotation = new Quaternion(0, 0, 0, 0);
         }
+        UnGravityEnemy();
     }
 
+
+    private void UnGravityEnemy()
+    {
+        if (EnemyCheck == 4)
+        {
+            Vector3 target = player.transform.position - this.gameObject.transform.position;//EnmeyからPlayerへのベクトル
+            target = target.normalized;//ベクトルの正規化
+            transform.position += target * speed * Time.deltaTime;
+        }
+    }
     private void OnTriggerStay2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Ground"))
@@ -107,6 +128,7 @@ public class EnemyDefault : MonoBehaviour
                     }
                 }
             }
+            
 
             if (speed != defaultSpeed)
             {
@@ -122,15 +144,15 @@ public class EnemyDefault : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Ground"))
+        if (other.gameObject.CompareTag("Ground") && EnemyCheck != 4)
         {
             transform.position = new Vector3(posx, posy-0.2f);
+            transform.position = new Vector3(posx, posy - 0.2f);
             Rota = false;
         }
-
         if (other.gameObject.CompareTag("Wall"))
         {
-            if (EnemyCheck == 1||EnemyCheck==2|| EnemyCheck == 3)
+            if (EnemyCheck == 1 || EnemyCheck == 2 || EnemyCheck == 3)
             {
                 rb.velocity = new Vector3(0, 20, 0);
                 OnGround = false;
