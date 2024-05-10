@@ -322,7 +322,7 @@ public class PlayerMove : MonoBehaviour
                     }
                     else
                     {
-                        HpObject[Hp - 1].SetActive(false);
+                        HpObject[0].SetActive(false);
                         Hp -= 1;
                         //éÄñSââèo
                     }
