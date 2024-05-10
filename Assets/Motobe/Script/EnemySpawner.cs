@@ -1,16 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class EnemySpawner : MonoBehaviour
 {
     float spawnTimer;
-
+    private GameObject player;
+    private float speed = 2;
     // Start is called before the first frame update
     void Start()
     {
         SpawnDraw();
         SpawnDraw2();
+        player=GameObject.Find("Player").gameObject;
     }
 
     // Update is called once per frame
@@ -66,4 +69,6 @@ public class EnemySpawner : MonoBehaviour
         ObjectEnemy(25, 13);
         ObjectEnemy(-25, 13);
     }
+
+   
 }
