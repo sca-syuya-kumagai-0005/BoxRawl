@@ -314,7 +314,7 @@ public class PlayerMove : MonoBehaviour
             {
                 if (!blink)
                 {
-                    if (Hp > 0)
+                    if (Hp > 1)
                     {
                         HpObject[Hp - 1].SetActive(false);
                         Hp -= 1;
@@ -322,6 +322,8 @@ public class PlayerMove : MonoBehaviour
                     }
                     else
                     {
+                        HpObject[Hp - 1].SetActive(false);
+                        Hp -= 1;
                         //éÄñSââèo
                     }
                 }
