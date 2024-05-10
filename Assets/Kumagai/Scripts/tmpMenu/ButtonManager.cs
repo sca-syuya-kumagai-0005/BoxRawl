@@ -11,6 +11,7 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private GameObject sceneCheckBackGround;
     [SerializeField] private GameObject Player;
     [SerializeField] private Text sceneName;
+    [SerializeField] private GameObject mainCamera;
     private bool sceneChangeFlag;
     private string yesOrNo;
     private string thisSceneName;
@@ -42,7 +43,7 @@ public class ButtonManager : MonoBehaviour
                 {
                     case "Main Game":
                         {
-                            thisSceneName = "メインゲーム";
+                            thisSceneName = "Main Game";
                         }
                         break;
                     case "Title":
@@ -93,6 +94,7 @@ public class ButtonManager : MonoBehaviour
     //シーン切り替え時の演出（仮）
     private IEnumerator SceneChanger()
     {
+        mainCamera.transform.position = new Vector3(Player.transform.position.x, 2, -10);
         sceneCheckBackGround.SetActive(false);
         yield return new WaitForSeconds(0.5f);
         sceneChangeFlag = true;
