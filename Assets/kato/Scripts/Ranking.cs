@@ -4,6 +4,7 @@ using System.IO;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class Ranking : MonoBehaviour
 {
@@ -30,6 +31,8 @@ public class Ranking : MonoBehaviour
         menu
     }
     RankingState rankingState;
+
+    [SerializeField]Scrollbar scrollbar;
 
     // Start is called before the first frame update
     void Start()
@@ -114,6 +117,7 @@ public class Ranking : MonoBehaviour
                 RankingManager.myName = PlayerName;
                 RankingManager.rankingUpdate = true;
                 rankingState = RankingState.ranking;
+                scrollbar.value = 0.0f;
             }
         }
     }
@@ -122,6 +126,11 @@ public class Ranking : MonoBehaviour
     {
         rankingBoard.SetActive(true );
         nameBoard.SetActive(false);
+
+        if (scrollbar.value <= 1)
+        {
+            scrollbar.value += Time.deltaTime/7;
+        }
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
