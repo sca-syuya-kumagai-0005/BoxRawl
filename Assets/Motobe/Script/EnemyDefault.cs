@@ -7,7 +7,8 @@ public class EnemyDefault : MonoBehaviour
     float posy;
     float posx;
     Rigidbody2D rb;
-    bool OnGround;
+    [SerializeField]bool OnGround;
+    [SerializeField]bool OnWall;
 
     bool Rota;
     int rota;
@@ -22,17 +23,20 @@ public class EnemyDefault : MonoBehaviour
 
     public GameObject EnemySkin;
     private GameObject player;
-
+    private bool myIsTrigger;
+    private Collider2D setColl;
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        setColl = GetComponent<Collider2D>();
+        setColl.isTrigger = true;
         OnGround = false;
         right = false;
         dir = 1;
         Jump = false;
         defaultSpeed = speed;
-        int random = Random.Range(0, 5);
+        int random = Random.Range(4, 5);
         player=GameObject.Find("Player").gameObject;
         if(player!=null )
         {
@@ -90,9 +94,26 @@ public class EnemyDefault : MonoBehaviour
     {
         if (EnemyCheck == 4)
         {
-            Vector3 target = player.transform.position - this.gameObject.transform.position;//EnmeyからPlayerへのベクトル
-            target = target.normalized;//ベクトルの正規化
-            transform.position += target * speed * Time.deltaTime;
+          
+            if (OnGround)
+            {
+                Vector3 target = player.transform.position - this.gameObject.transform.position;//EnmeyからPlayerへのベクトル
+                target = target.normalized;//ベクトルの正規化
+                target.y = this.gameObject.transform.position.y;
+                transform.position += target * speed * Time.deltaTime;
+               
+                Debug.Log("地面と接触しました");
+            }
+            else
+            {
+                Vector3 target = player.transform.position - this.gameObject.transform.position;//EnmeyからPlayerへのベクトル
+                target = target.normalized;//ベクトルの正規化
+                transform.position += target * speed * Time.deltaTime;
+               
+            }
+           
+
+
         }
     }
     private void OnTriggerStay2D(Collider2D other)
@@ -141,17 +162,25 @@ public class EnemyDefault : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
-
+  
     private void OnTriggerEnter2D(Collider2D other)
     {
+      
+        
         if (other.gameObject.CompareTag("Ground") && EnemyCheck != 4)
         {
+          
             transform.position = new Vector3(posx, posy-0.2f);
             transform.position = new Vector3(posx, posy - 0.2f);
             Rota = false;
         }
+        if(other.gameObject.CompareTag("Ground"))
+        {
+            OnGround = true;
+        }
         if (other.gameObject.CompareTag("Wall"))
         {
+            OnWall = true;
             if (EnemyCheck == 1 || EnemyCheck == 2 || EnemyCheck == 3)
             {
                 rb.velocity = new Vector3(0, 20, 0);
@@ -171,9 +200,28 @@ public class EnemyDefault : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Ground"))
+        if (other.gameObject.CompareTag("Ground")||other.gameObject.CompareTag("Button"))
         {
             Rota = true;
+            OnGround = false;
         }
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            Debug.Log("プレイヤーと接触しました");
+            setColl.isTrigger = false;
+        }
+        if(collision.gameObject.CompareTag("Ground")||collision.gameObject.CompareTag("Button"))
+        {
+            OnGround = true;
+            //setColl.isTrigger = true;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        
     }
 }

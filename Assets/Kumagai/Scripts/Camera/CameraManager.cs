@@ -21,26 +21,14 @@ public class CameraManager : MonoBehaviour
     void Update()
     {
        
-        if(PlayerMove.Drop)
-        {
-           jumpCameraRevision = 1;
-        }
-        else if(!OnGround)
-        {
-            jumpCameraRevision = tmpRevision;
-        }
-        gameObject.transform.position = new Vector3(player.transform.position.x, player.transform.position.y * jumpCameraRevision, -10);
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        
-    }
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if(collision.gameObject.tag=="Ground")
-        {
-            OnGround=false;
-        }
+        //if(PlayerMove.JumpCount==0)
+        //{
+        //        jumpCameraRevision = 1;
+        //}
+        //else 
+        //{
+        //        jumpCameraRevision = tmpRevision;
+        //}
+        this.gameObject.transform.position = new Vector3(player.transform.position.x, player.transform.position.y * jumpCameraRevision, -10);
     }
 }
