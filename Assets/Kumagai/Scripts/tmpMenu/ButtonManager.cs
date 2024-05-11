@@ -14,7 +14,7 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private GameObject mainCamera;
     private bool sceneChangeFlag;
     private string yesOrNo;
-    private string thisSceneName;
+    [SerializeField]private string thisSceneName;
     public static bool sceneCheck;
 
     
