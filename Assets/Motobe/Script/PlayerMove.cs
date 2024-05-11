@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-
+using UnityEngine.SceneManagement;
 public class PlayerMove : MonoBehaviour
 {
     //Rigidbody
@@ -42,7 +42,7 @@ public class PlayerMove : MonoBehaviour
     private int Hp;
 
     //‹ó’†‚É‹‚é‚©‚Ì”»’è
-    private int JumpCount;
+    public static int JumpCount;
 
     //•Ç‚ÉG‚ê‚Ä‚¢‚é‚©‚Ì”»’è
     private bool OnWall;
@@ -246,13 +246,16 @@ public class PlayerMove : MonoBehaviour
         //Ground‚É‚Ó‚ê‚½‚Æ‚«
         if (other.gameObject.CompareTag("Ground"))
         {
-            if (!startRota)
+            if (!startRota&&SceneManager.GetActiveScene().name!="TmpMenu")
             {
                 PlayerSkin.Rota = false;
                 StartCount();
                 //Time.timeScale = 0;
-                
-                
+            }
+            else if(SceneManager.GetActiveScene().name=="TmpMenu")
+            {
+                PlayerSkin.Rota = false;
+                startRota = true;
             }
             DoubleWall = false;
             //ƒqƒbƒvƒhƒƒbƒv‚ÅG‚ê‚½‚çƒJƒƒ‰‚ğ—h‚ç‚·
