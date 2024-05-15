@@ -8,14 +8,15 @@ TagManager:
   - Wall
   - Button
   - Enemy
+  - Drop
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
-  - 
+  - Enemy
   - 
   - 
   - 

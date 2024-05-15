@@ -1,5 +1,8 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq.Expressions;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyDefault : MonoBehaviour
@@ -9,6 +12,11 @@ public class EnemyDefault : MonoBehaviour
     Rigidbody2D rb;
     [SerializeField]bool OnGround;
     [SerializeField]bool OnWall;
+    [SerializeField] bool hitPlayer;
+    [SerializeField] private bool hitDirUp;
+    [SerializeField] private bool hitDirDown;
+    [SerializeField] private bool hitDirRight;
+    [SerializeField] private bool hitDirLeft;
 
     bool Rota;
     int rota;
@@ -24,13 +32,12 @@ public class EnemyDefault : MonoBehaviour
     public GameObject EnemySkin;
     private GameObject player;
     private bool myIsTrigger;
-    private Collider2D setColl;
+   
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        setColl = GetComponent<Collider2D>();
-        setColl.isTrigger = true;
+       
         OnGround = false;
         right = false;
         dir = 1;
@@ -38,10 +45,6 @@ public class EnemyDefault : MonoBehaviour
         defaultSpeed = speed;
         int random = Random.Range(0, 4);
         player=GameObject.Find("Player").gameObject;
-        if(player!=null )
-        {
-            Debug.Log(player);
-        }
         EnemyCheck = random;
         Rota = true;
     }
@@ -56,8 +59,8 @@ public class EnemyDefault : MonoBehaviour
             posx += speed * Time.deltaTime * dir;
             transform.position = new Vector3(posx, posy);
         }
-      
-        if (OnGround == false&&EnemyCheck!=4)
+        
+        if (!OnGround&&EnemyCheck!=4)
         {
             Vector2 myGravity = new Vector2(0, -9.81f*200*Time.deltaTime);
             rb.AddForce(myGravity);
@@ -92,16 +95,32 @@ public class EnemyDefault : MonoBehaviour
 
     private void UnGravityEnemy()
     {
+        HitRay(Vector3.left);
+        HitRay(Vector3.up);
+        HitRay(Vector3.right);
+       
         if (EnemyCheck == 4)
         {
-          
             if (OnGround)
+            {
+              
+                
+                Vector3 target = player.transform.position - this.gameObject.transform.position;//EnmeyからPlayerへのベクトル
+                target = target.normalized;//ベクトルの正規化
+                target.y = 0;
+                transform.position += target * speed * Time.deltaTime;
+                Rota = false;
+                Debug.Log("壁と接触しました");
+            }
+           else if(OnWall)
             {
                 Vector3 target = player.transform.position - this.gameObject.transform.position;//EnmeyからPlayerへのベクトル
                 target = target.normalized;//ベクトルの正規化
-                target.y = this.gameObject.transform.position.y;
-                transform.position += target * speed * Time.deltaTime;
                
+              
+                target.x = 0;
+                transform.position += target * speed * Time.deltaTime;
+                Rota = false;
                 Debug.Log("地面と接触しました");
             }
             else
@@ -118,8 +137,15 @@ public class EnemyDefault : MonoBehaviour
     }
     private void OnTriggerStay2D(Collider2D other)
     {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            Debug.Log("プレイヤーと接触しました");
+            hitPlayer = true;
+          
+        }
         if (other.gameObject.CompareTag("Ground"))
         {
+           
             if (EnemyCheck == 0 || EnemyCheck == 3)
             {
                 transform.position = new Vector3(posx, posy);
@@ -156,7 +182,6 @@ public class EnemyDefault : MonoBehaviour
                 speed = defaultSpeed;
             }
         }
-
         if (other.gameObject.CompareTag("Drop"))
         {
             Destroy(this.gameObject);
@@ -165,8 +190,8 @@ public class EnemyDefault : MonoBehaviour
   
     private void OnTriggerEnter2D(Collider2D other)
     {
+
       
-        
         if (other.gameObject.CompareTag("Ground") && EnemyCheck != 4)
         {
           
@@ -204,24 +229,86 @@ public class EnemyDefault : MonoBehaviour
         {
             Rota = true;
             OnGround = false;
+            Debug.Log("地面から離れました");
         }
+        if(other.gameObject.CompareTag("Wall"))
+        {
+            Rota = true;
+            OnWall = false;
+            Debug.Log("壁から離れました");
+        }
+        if (other.gameObject.CompareTag("Player"))
+        {
+            Debug.Log("プレイヤーから離れました");
+            hitPlayer = false;
+        }
+
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+      if(collision.gameObject.CompareTag("Ground")||collision.gameObject.CompareTag("Wall"))
         {
-            Debug.Log("プレイヤーと接触しました");
-            setColl.isTrigger = false;
+                
+                Rota = false;
         }
-        if(collision.gameObject.CompareTag("Ground")||collision.gameObject.CompareTag("Button"))
+
+    }
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Wall"))
         {
-            OnGround = true;
-            //setColl.isTrigger = true;
+          
+            Rota = false;
         }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        
+        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Wall"))
+        {
+
+            Rota = true;
+        }
+    }
+
+    private void HitRay(Vector3 dir)
+    {
+        RaycastHit2D hit=
+        Physics2D.Raycast(this.transform.position, dir,10);
+        if (hit.collider != null)
+        {
+            switch (dir)
+            {
+                case Vector3 v when v.Equals(Vector3.down):
+                    {
+                        hitDirDown = true;
+                    }
+                    break;
+                case Vector3 v when v.Equals(Vector3.up):
+                    {
+                       hitDirUp = true;
+                    }
+                    break;
+                case Vector3 v when v.Equals(Vector3.right):
+                    {
+                       hitDirRight = true;
+                    }
+                    break;
+                case Vector3 v when v.Equals(Vector3.left):
+                    {
+                       hitDirLeft = true;
+                    }
+                    break;
+            }
+            
+        }
+        else
+        {
+            hitDirDown=false;   
+            hitDirLeft=false;
+            hitDirRight=false;
+            hitDirUp=false; 
+        }
+        Debug.DrawRay(this.transform.position, dir, new Color(255, 255, 255), 100);
     }
 }
