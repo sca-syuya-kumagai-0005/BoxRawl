@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class RankingManager : MonoBehaviour
 {
@@ -82,5 +83,15 @@ public class RankingManager : MonoBehaviour
         }
 
         
+    }
+
+    public void Retray()
+    {
+        SceneManager.LoadScene("Main Game");
+    }
+
+    public void goMenu()
+    {
+        SceneManager.LoadScene("Menu");
     }
 }

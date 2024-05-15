@@ -23,6 +23,10 @@ public class Ranking : MonoBehaviour
     public static string PlayerName;
     public InputField nameInputField;
 
+    [Header("リザルト関係")]
+    [SerializeField] Text resultText;
+    float resultScore;
+    bool isResult = false;
     enum RankingState
     {
         result = 0,
@@ -33,6 +37,7 @@ public class Ranking : MonoBehaviour
     RankingState rankingState;
 
     [SerializeField]Scrollbar scrollbar;
+    bool isRankingScroll = true;
 
     // Start is called before the first frame update
     void Start()
@@ -41,11 +46,13 @@ public class Ranking : MonoBehaviour
         resultBoard.SetActive(false);
         nameBoard.SetActive(false);
         rankingBoard.SetActive(false);
-        //gameOverMenu.SetActive(false);
+        gameOverMenu.SetActive(false);
 
         PlayerName = null;
 
         RankingManager.rankingUpdate = false;
+
+        resultScore = 0;
     }
 
     // Update is called once per frame
@@ -56,15 +63,31 @@ public class Ranking : MonoBehaviour
             switch (rankingState)
             {
                 case RankingState.result:
+                    resultBoard.SetActive(true);
+                    nameBoard.SetActive(false);
+                    rankingBoard.SetActive(false);
+                    gameOverMenu.SetActive(false);
                     Result();
                     break;
                 case RankingState.name:
+                    resultBoard.SetActive(false);
+                    nameBoard.SetActive(true);
+                    rankingBoard.SetActive(false);
+                    gameOverMenu.SetActive(false);
                     nameInput();
                     break;
                 case RankingState.ranking:
+                    resultBoard.SetActive(false);
+                    nameBoard.SetActive(false);
+                    rankingBoard.SetActive(true);
+                    gameOverMenu.SetActive(false);
                     ranking();
                     break;
                 case RankingState.menu:
+                    resultBoard.SetActive(false);
+                    nameBoard.SetActive(false);
+                    rankingBoard.SetActive(false);
+                    gameOverMenu.SetActive(true);
                     gameMenu();
                     break;
             }
@@ -79,32 +102,45 @@ public class Ranking : MonoBehaviour
 
     void Result()
     {
-        totalScore = 20;     //スコア受け取り
+        totalScore = 20000;     //スコア受け取り
         RankingManager.myScore = totalScore;
-        resultBoard.SetActive(true);
-        rankingBoard.SetActive(false );
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        //カウントアップ
+        if(resultScore < totalScore)
         {
-            if (totalScore > RankingManager.rankingScore[9]
-                || RankingManager.rankingScore[9] == null)
+            resultScore += (totalScore * Time.deltaTime)/4;
+            resultText.text = resultScore.ToString("f0");
+        }
+        else if(resultScore > totalScore) 
+        {
+            resultScore = totalScore;
+            resultText.text = resultScore.ToString("f0");
+
+            isResult = true;
+        }
+
+
+        if(isResult)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
-                rankingState = RankingState.name;
-            }
-            else
-            {
-                RankingManager.rankingUpdate = true;
-                rankingState = RankingState.ranking;
+                if (totalScore > RankingManager.rankingScore[9]
+                    || RankingManager.rankingScore[9] == null)
+                {
+                    rankingState = RankingState.name;
+                }
+                else
+                {
+                    RankingManager.rankingUpdate = true;
+                    rankingState = RankingState.ranking;
+                }
             }
         }
     }
 
     void nameInput()
     {
-        resultBoard.SetActive(false);
-        nameBoard.SetActive(true);
-
-        if(Input.GetKey(KeyCode.P))
+        if(Input.GetKey(KeyCode.Return))
         {
             PlayerName = nameInputField.text;
         }
@@ -124,17 +160,23 @@ public class Ranking : MonoBehaviour
 
     void ranking()
     {
-        rankingBoard.SetActive(true );
-        nameBoard.SetActive(false);
-
-        if (scrollbar.value <= 1)
+        if(isRankingScroll)
         {
-            scrollbar.value += Time.deltaTime/7;
+            if (scrollbar.value <= 1)
+            {
+                scrollbar.value += Time.deltaTime / 7;
+            }
+            else if(scrollbar.value >= 1)
+            {
+                isRankingScroll = false;
+            }
         }
-
-        if (Input.GetKeyDown(KeyCode.Escape))
+        else if(!isRankingScroll)
         {
-            rankingState = RankingState.result;
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                rankingState = RankingState.menu;
+            }
         }
     }
 
