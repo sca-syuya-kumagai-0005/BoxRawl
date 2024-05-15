@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Unity.VisualScripting;
 using UnityEngine;
-
+//‚¨ŽŽ‚µ
 public class EnemyDefault : MonoBehaviour
 {
     float posy;
@@ -43,7 +43,7 @@ public class EnemyDefault : MonoBehaviour
         dir = 1;
         Jump = false;
         defaultSpeed = speed;
-        int random = Random.Range(0, 4);
+        int random = Random.Range(0, 5);
         player=GameObject.Find("Player").gameObject;
         EnemyCheck = random;
         Rota = true;
