@@ -9,6 +9,7 @@ TagManager:
   - Button
   - Enemy
   - Drop
+  - Pary
   layers:
   - Default
   - TransparentFX
