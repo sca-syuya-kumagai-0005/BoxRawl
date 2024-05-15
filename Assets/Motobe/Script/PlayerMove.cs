@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 public class PlayerMove : MonoBehaviour
 {
     //Rigidbody
@@ -59,7 +60,7 @@ public class PlayerMove : MonoBehaviour
     float blinkCount;
 
     //É_ÉÅÅ[ÉWÇéÛÇØÇΩå„ÇÃñ≥ìGéûä‘
-    //invincibleTime*0.05ïbñ≥ìGéûä‘(invincibleTime==8Ç»ÇÁ0.4ïb)Å@ÉXÉeÅ[É^ÉXÇ…ì¸ÇÍÇƒÇ‡Ç¢Ç¢Ç©Ç‡
+    //invincibleTime*0.05ïbñ≥ìGéûä‘(invincibleTime==8Ç»ÇÁ0.4ïb)
     public int invincibleTime;
     int invincibleTimeCheck;
 
@@ -68,9 +69,14 @@ public class PlayerMove : MonoBehaviour
     public Image[] Count;
     public GameObject EnemySpawnner;
 
+    //ÉpÉäÉBèàóù
+    public GameObject ParyObject;
+    public static bool paryCheck;
+
     // Start is called before the first frame update
     void Start()
     {
+        
         JumpCount = 0;
         blink = false;
         blinkCheck = false;
@@ -98,12 +104,14 @@ public class PlayerMove : MonoBehaviour
         }
 
         ButtonManager.sceneCheck = false;
+        ParyObject.SetActive(false);
+        paryCheck = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(DoubleWall);
+        //Debug.Log(JumpCount);
 
         if (!ButtonManager.sceneCheck)
         {
@@ -239,7 +247,6 @@ public class PlayerMove : MonoBehaviour
                 blinkCount = 0;
             }
         }
-            
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -251,6 +258,7 @@ public class PlayerMove : MonoBehaviour
             {
                 PlayerSkin.Rota = false;
                 StartCount();
+                
                 //Time.timeScale = 0;
             }
             else if(SceneManager.GetActiveScene().name=="TmpMenu")
@@ -264,6 +272,7 @@ public class PlayerMove : MonoBehaviour
             {
                 CameraMove.sway = true;
             }
+
         }
         if(other.gameObject.CompareTag("Button"))
         {
@@ -282,6 +291,7 @@ public class PlayerMove : MonoBehaviour
             PlayerSkin.rota = 0;
             PlayerSkin.Rota = false;
             JumpCount = 0;
+            ParyObject.SetActive(false);
         }
         //ínñ Ç…êGÇÍÇƒÇ¢ÇÈä‘
         if (collision.gameObject.CompareTag("Ground")|| collision.gameObject.CompareTag("Button"))
@@ -290,6 +300,7 @@ public class PlayerMove : MonoBehaviour
             PlayerSkin.rota = 0;
             PlayerSkin.Rota = false;
             JumpCount = 0;
+            ParyObject.SetActive(false);
         }
     }
     private void OnCollisionExit2D(Collision2D collision)
@@ -298,6 +309,7 @@ public class PlayerMove : MonoBehaviour
         if (collision.gameObject.CompareTag("Wall"))
         {
             JumpCount = 1;
+            ParyObject.SetActive(true);
             PlayerSkin.Rota = true;
             OnWall = false;
             DoubleWall = false;
@@ -306,6 +318,10 @@ public class PlayerMove : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground")|| collision.gameObject.CompareTag("Button"))
         {
             JumpCount = 1;
+            //ÉQÅ[ÉÄèIóπéûÇ…ÉGÉâÅ[ìfÇ≠
+            //ÉQÅ[ÉÄÇÃêiçsÇ…ÇÕä÷åWÇ»Ç¢
+            //ÉGÉâÅ[Çè¡Ç∑Ç…ÇÕçƒíËã`
+            ParyObject.SetActive(true);
             PlayerSkin.Rota = true;
         }
     }
@@ -314,21 +330,24 @@ public class PlayerMove : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
-            if (!Drop)
+            if (!paryCheck)
             {
-                if (!blink)
+                if (!Drop)
                 {
-                    if (Hp > 1)
+                    if (!blink)
                     {
-                        HpObject[Hp - 1].SetActive(false);
-                        Hp -= 1;
-                        blink = true;
-                    }
-                    else
-                    {
-                        HpObject[0].SetActive(false);
-                        Hp -= 1;
-                        //éÄñSââèo
+                        if (Hp > 1)
+                        {
+                            HpObject[Hp - 1].SetActive(false);
+                            Hp -= 1;
+                            blink = true;
+                        }
+                        else
+                        {
+                            HpObject[0].SetActive(false);
+                            Hp -= 1;
+                            //éÄñSââèo
+                        }
                     }
                 }
             }
@@ -337,7 +356,6 @@ public class PlayerMove : MonoBehaviour
 
     public void StartCount()
     {
-        Debug.Log("a");
         var sequence = DOTween.Sequence();
         var img3 = Count[3];
         var c3 = img3.color;
