@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class ParyController : MonoBehaviour
 {
     public GameObject PlayerObject;
-    bool parySet;
+    public static bool parySet;
 
     AudioSource audioSource;
     public AudioClip parySound;

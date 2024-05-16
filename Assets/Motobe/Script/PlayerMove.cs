@@ -73,6 +73,9 @@ public class PlayerMove : MonoBehaviour
     public GameObject ParyObject;
     public static bool paryCheck;
 
+    //ダメージ演出
+    public Image damageEffect;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -176,7 +179,7 @@ public class PlayerMove : MonoBehaviour
                 {
                     //空中にいるとき
 
-                    if (JumpCount == 1)
+                    if (JumpCount == 1||ParyController.parySet)
                     {
                         PlayerSkin.Rota = false;
                         PlayerSkin.rota = 0;
@@ -270,7 +273,7 @@ public class PlayerMove : MonoBehaviour
             //ヒップドロップで触れたらカメラを揺らす
             if (Drop)
             {
-                CameraMove.sway = true;
+                CameraMove.dropSway = true;
             }
 
         }
@@ -278,8 +281,14 @@ public class PlayerMove : MonoBehaviour
         {
             if (Drop)
             {
-                CameraMove.sway = true;
+                CameraMove.dropSway = true;
             }
+        }
+        if (other.gameObject.CompareTag("Wall"))
+        {
+            OnWall = true;
+            PlayerSkin.rota = 0;
+            PlayerSkin.Rota = false;
         }
     }
     private void OnCollisionStay2D(Collision2D collision)
@@ -287,9 +296,7 @@ public class PlayerMove : MonoBehaviour
         //壁に触れている間
         if (collision.gameObject.CompareTag("Wall"))
         {
-            OnWall = true;
-            PlayerSkin.rota = 0;
-            PlayerSkin.Rota = false;
+            
             JumpCount = 0;
             ParyObject.SetActive(false);
         }
@@ -340,11 +347,13 @@ public class PlayerMove : MonoBehaviour
                             HpObject[Hp - 1].SetActive(false);
                             Hp -= 1;
                             blink = true;
+                            CameraMove.damageSway = true;
+                            DamageEffect();
                         }
                         else
                         {
                             HpObject[0].SetActive(false);
-                            Hp -= 1;
+                            Hp =0;
                             //死亡演出
                         }
                     }
@@ -387,5 +396,15 @@ public class PlayerMove : MonoBehaviour
     {
         startRota = true;
         EnemySpawnner.SetActive(true);
+    }
+
+    public void DamageEffect()
+    {
+        var sequence = DOTween.Sequence();
+        var img = damageEffect;
+        var color = damageEffect.color;
+        color.a = 0;
+        sequence.Append(DOTween.ToAlpha(() => img.color, color => img.color = color, 0.8f, 0.1f));
+        sequence.Append(DOTween.ToAlpha(() => img.color, color => img.color = color, 0, 0.1f));
     }
 }
