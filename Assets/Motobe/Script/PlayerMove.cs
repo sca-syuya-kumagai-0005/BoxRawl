@@ -309,7 +309,8 @@ public class PlayerMove : MonoBehaviour
         if (collision.gameObject.CompareTag("Wall"))
         {
             JumpCount = 1;
-            ParyObject.SetActive(true);
+            if (ParyObject != null)
+                ParyObject.SetActive(true);
             PlayerSkin.Rota = true;
             OnWall = false;
             DoubleWall = false;
@@ -318,9 +319,7 @@ public class PlayerMove : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground")|| collision.gameObject.CompareTag("Button"))
         {
             JumpCount = 1;
-            //ゲーム終了時にエラー吐く
-            //ゲームの進行には関係ない
-            //エラーを消すには再定義
+            if(ParyObject!=null)
             ParyObject.SetActive(true);
             PlayerSkin.Rota = true;
         }

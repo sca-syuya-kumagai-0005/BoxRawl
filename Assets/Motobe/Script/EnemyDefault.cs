@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Unity.VisualScripting;
 using UnityEngine;
-//‚¨ŽŽ‚µ
+//EnemyCheck‚Ì4‚ªƒoƒO‚Á‚Ä‚é
 public class EnemyDefault : MonoBehaviour
 {
     float posy;
