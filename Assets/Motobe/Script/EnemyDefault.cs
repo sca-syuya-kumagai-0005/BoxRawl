@@ -17,7 +17,10 @@ public class EnemyDefault : MonoBehaviour
     [SerializeField] private bool hitDirDown;
     [SerializeField] private bool hitDirRight;
     [SerializeField] private bool hitDirLeft;
-
+    Vector3 target;
+    private float momongaUp=15;
+    private bool momongaUpFlag;
+    private bool momongaDownFlag;
     bool Rota;
     int rota;
 
@@ -37,14 +40,17 @@ public class EnemyDefault : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-       
+        momongaUpFlag = false ;
+      
+        momongaDownFlag = true ;
         OnGround = false;
         right = false;
         dir = 1;
         Jump = false;
         defaultSpeed = speed;
-        int random = Random.Range(0, 5);
+        int random = Random.Range(0, 6);
         player=GameObject.Find("Player").gameObject;
+        target = player.transform.position-this.transform.position;
         EnemyCheck = random;
         Rota = true;
     }
@@ -52,7 +58,7 @@ public class EnemyDefault : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(EnemyCheck!=4)
+        if(EnemyCheck<=4)
         {
             posy = transform.position.y;
             posx = transform.position.x;
@@ -60,7 +66,7 @@ public class EnemyDefault : MonoBehaviour
             transform.position = new Vector3(posx, posy);
         }
         
-        if (!OnGround&&EnemyCheck!=4)
+        if (!OnGround&&EnemyCheck!<=4)
         {
             Vector2 myGravity = new Vector2(0, -9.81f*200*Time.deltaTime);
             rb.AddForce(myGravity);
@@ -90,42 +96,42 @@ public class EnemyDefault : MonoBehaviour
             EnemySkin.transform.rotation = new Quaternion(0, 0, 0, 0);
         }
         UnGravityEnemy();
+        MomongaEnemy();
     }
 
 
     private void UnGravityEnemy()
     {
-        HitRay(Vector3.left);
-        HitRay(Vector3.up);
-        HitRay(Vector3.right);
-       
         if (EnemyCheck == 4)
         {
+            if(OnWall||OnGround)
+            {
+                HitRay(Vector3.left);
+                HitRay(Vector3.up);
+                HitRay(Vector3.right);
+                HitRay(Vector3.down);
+            }
             if (OnGround)
             {
-              
-                
-                Vector3 target = player.transform.position - this.gameObject.transform.position;//EnmeyからPlayerへのベクトル
+               target = player.transform.position - this.gameObject.transform.position;//EnmeyからPlayerへのベクトル
                 target = target.normalized;//ベクトルの正規化
                 target.y = 0;
                 transform.position += target * speed * Time.deltaTime;
                 Rota = false;
-                Debug.Log("壁と接触しました");
+            
             }
            else if(OnWall)
             {
-                Vector3 target = player.transform.position - this.gameObject.transform.position;//EnmeyからPlayerへのベクトル
+                target = player.transform.position - this.gameObject.transform.position;//EnmeyからPlayerへのベクトル
                 target = target.normalized;//ベクトルの正規化
-               
-              
                 target.x = 0;
                 transform.position += target * speed * Time.deltaTime;
                 Rota = false;
-                Debug.Log("地面と接触しました");
+              
             }
             else
             {
-                Vector3 target = player.transform.position - this.gameObject.transform.position;//EnmeyからPlayerへのベクトル
+                target = player.transform.position - this.gameObject.transform.position;//EnmeyからPlayerへのベクトル
                 target = target.normalized;//ベクトルの正規化
                 transform.position += target * speed * Time.deltaTime;
                
@@ -134,6 +140,52 @@ public class EnemyDefault : MonoBehaviour
 
 
         }
+    }
+
+    private void MomongaEnemy()
+    {
+        if(EnemyCheck == 5)
+        {
+            HitRay(Vector3.up);
+            if (this.transform.position.y > momongaUp||hitDirUp)
+            {
+                momongaUpFlag = false;
+                momongaDownFlag = true;
+            }
+            if (momongaDownFlag)
+            {
+                Debug.Log("プレイヤーの位置を獲得しました");
+                target = player.transform.position - this.gameObject.transform.position;//EnmeyからPlayerへのベクトル
+                target = target.normalized;//ベクトルの正規化
+                momongaDownFlag = false;
+            }
+            if (OnGround || hitPlayer)
+            {
+                momongaUpFlag = true;
+                Rota = false;
+                Debug.Log("地面と接触しました");
+            }
+            if(OnWall)
+            {
+                target.x = 0;
+                Rota = false;
+            }
+
+            if(momongaUpFlag)
+            {
+                Debug.Log("上昇を始めました");
+                Vector3 pos=this.transform.position;
+                target.x = 0;
+                pos.y += speed * Time.deltaTime;
+                this.transform.position=new Vector3(pos.x,pos.y,pos.z);
+            }
+            else
+            {
+                transform.position += target * speed * Time.deltaTime;
+            }
+         
+        }
+       
     }
     private void OnTriggerStay2D(Collider2D other)
     {
@@ -192,7 +244,7 @@ public class EnemyDefault : MonoBehaviour
     {
 
       
-        if (other.gameObject.CompareTag("Ground") && EnemyCheck != 4)
+        if (other.gameObject.CompareTag("Ground") && EnemyCheck <= 4)
         {
           
             transform.position = new Vector3(posx, posy-0.2f);
@@ -241,6 +293,7 @@ public class EnemyDefault : MonoBehaviour
         {
             Debug.Log("プレイヤーから離れました");
             hitPlayer = false;
+            Rota = true;
         }
 
     }
@@ -264,17 +317,17 @@ public class EnemyDefault : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Wall"))
+        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Wall")||collision.gameObject.CompareTag("Player"))
         {
-
             Rota = true;
         }
+
     }
 
     private void HitRay(Vector3 dir)
     {
         RaycastHit2D hit=
-        Physics2D.Raycast(this.transform.position, dir,10);
+        Physics2D.Raycast(this.transform.position, dir,1);
         if (hit.collider != null)
         {
             switch (dir)
@@ -309,6 +362,6 @@ public class EnemyDefault : MonoBehaviour
             hitDirRight=false;
             hitDirUp=false; 
         }
-        Debug.DrawRay(this.transform.position, dir, new Color(255, 255, 255), 100);
+       
     }
 }

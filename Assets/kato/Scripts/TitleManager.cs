@@ -13,6 +13,8 @@ public class TitleManager : MonoBehaviour
     [SerializeField] GameObject playerObj;
     Rigidbody2D rg;
 
+    [SerializeField] GameObject EnemyObj;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,6 +30,8 @@ public class TitleManager : MonoBehaviour
             startGame();
         }
 
+
+
     }
 
     void startGame()
@@ -40,7 +44,7 @@ public class TitleManager : MonoBehaviour
     public IEnumerator playerJump()
     {
         yield return new WaitForSeconds(3.0f);
-        rg.velocity = new Vector2(1, 5) * 1;
+        rg.velocity = new Vector2(1, 9.5f) * 1;
 
         yield return new WaitForSeconds(3.0f);
         //SceneManager.LoadScene("Menu");
