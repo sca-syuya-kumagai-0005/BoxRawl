@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 public class PlayerMove : MonoBehaviour
 {
     //Rigidbody
@@ -59,7 +60,7 @@ public class PlayerMove : MonoBehaviour
     float blinkCount;
 
     //ƒ_ƒ[ƒW‚ðŽó‚¯‚½Œã‚Ì–³“GŽžŠÔ
-    //invincibleTime*0.05•b–³“GŽžŠÔ(invincibleTime==8‚È‚ç0.4•b)@ƒXƒe[ƒ^ƒX‚É“ü‚ê‚Ä‚à‚¢‚¢‚©‚à
+    //invincibleTime*0.05•b–³“GŽžŠÔ(invincibleTime==8‚È‚ç0.4•b)
     public int invincibleTime;
     int invincibleTimeCheck;
 
@@ -68,9 +69,17 @@ public class PlayerMove : MonoBehaviour
     public Image[] Count;
     public GameObject EnemySpawnner;
 
+    //ƒpƒŠƒBˆ—
+    public GameObject ParyObject;
+    public static bool paryCheck;
+
+    //ƒ_ƒ[ƒW‰‰o
+    public Image damageEffect;
+
     // Start is called before the first frame update
     void Start()
     {
+        
         JumpCount = 0;
         blink = false;
         blinkCheck = false;
@@ -98,12 +107,14 @@ public class PlayerMove : MonoBehaviour
         }
 
         ButtonManager.sceneCheck = false;
+        ParyObject.SetActive(false);
+        paryCheck = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(DoubleWall);
+        //Debug.Log(JumpCount);
 
         if (!ButtonManager.sceneCheck)
         {
@@ -168,7 +179,7 @@ public class PlayerMove : MonoBehaviour
                 {
                     //‹ó’†‚É‚¢‚é‚Æ‚«
 
-                    if (JumpCount == 1)
+                    if (JumpCount == 1||ParyController.parySet)
                     {
                         PlayerSkin.Rota = false;
                         PlayerSkin.rota = 0;
@@ -239,7 +250,6 @@ public class PlayerMove : MonoBehaviour
                 blinkCount = 0;
             }
         }
-            
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -251,6 +261,7 @@ public class PlayerMove : MonoBehaviour
             {
                 PlayerSkin.Rota = false;
                 StartCount();
+                
                 //Time.timeScale = 0;
             }
             else if(SceneManager.GetActiveScene().name=="TmpMenu")
@@ -262,15 +273,22 @@ public class PlayerMove : MonoBehaviour
             //ƒqƒbƒvƒhƒƒbƒv‚ÅG‚ê‚½‚çƒJƒƒ‰‚ð—h‚ç‚·
             if (Drop)
             {
-                CameraMove.sway = true;
+                CameraMove.dropSway = true;
             }
+
         }
         if(other.gameObject.CompareTag("Button"))
         {
             if (Drop)
             {
-                CameraMove.sway = true;
+                CameraMove.dropSway = true;
             }
+        }
+        if (other.gameObject.CompareTag("Wall"))
+        {
+            OnWall = true;
+            PlayerSkin.rota = 0;
+            PlayerSkin.Rota = false;
         }
     }
     private void OnCollisionStay2D(Collision2D collision)
@@ -278,10 +296,9 @@ public class PlayerMove : MonoBehaviour
         //•Ç‚ÉG‚ê‚Ä‚¢‚éŠÔ
         if (collision.gameObject.CompareTag("Wall"))
         {
-            OnWall = true;
-            PlayerSkin.rota = 0;
-            PlayerSkin.Rota = false;
+            
             JumpCount = 0;
+            ParyObject.SetActive(false);
         }
         //’n–Ê‚ÉG‚ê‚Ä‚¢‚éŠÔ
         if (collision.gameObject.CompareTag("Ground")|| collision.gameObject.CompareTag("Button"))
@@ -290,6 +307,7 @@ public class PlayerMove : MonoBehaviour
             PlayerSkin.rota = 0;
             PlayerSkin.Rota = false;
             JumpCount = 0;
+            ParyObject.SetActive(false);
         }
     }
     private void OnCollisionExit2D(Collision2D collision)
@@ -298,6 +316,8 @@ public class PlayerMove : MonoBehaviour
         if (collision.gameObject.CompareTag("Wall"))
         {
             JumpCount = 1;
+            if (ParyObject != null)
+                ParyObject.SetActive(true);
             PlayerSkin.Rota = true;
             OnWall = false;
             DoubleWall = false;
@@ -306,6 +326,8 @@ public class PlayerMove : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground")|| collision.gameObject.CompareTag("Button"))
         {
             JumpCount = 1;
+            if(ParyObject!=null)
+            ParyObject.SetActive(true);
             PlayerSkin.Rota = true;
         }
     }
@@ -314,21 +336,26 @@ public class PlayerMove : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
-            if (!Drop)
+            if (!paryCheck)
             {
-                if (!blink)
+                if (!Drop)
                 {
-                    if (Hp > 1)
+                    if (!blink)
                     {
-                        HpObject[Hp - 1].SetActive(false);
-                        Hp -= 1;
-                        blink = true;
-                    }
-                    else
-                    {
-                        HpObject[0].SetActive(false);
-                        Hp -= 1;
-                        //Ž€–S‰‰o
+                        if (Hp > 1)
+                        {
+                            HpObject[Hp - 1].SetActive(false);
+                            Hp -= 1;
+                            blink = true;
+                            CameraMove.damageSway = true;
+                            DamageEffect();
+                        }
+                        else
+                        {
+                            HpObject[0].SetActive(false);
+                            Hp =0;
+                            //Ž€–S‰‰o
+                        }
                     }
                 }
             }
@@ -337,7 +364,6 @@ public class PlayerMove : MonoBehaviour
 
     public void StartCount()
     {
-        Debug.Log("a");
         var sequence = DOTween.Sequence();
         var img3 = Count[3];
         var c3 = img3.color;
@@ -370,5 +396,15 @@ public class PlayerMove : MonoBehaviour
     {
         startRota = true;
         EnemySpawnner.SetActive(true);
+    }
+
+    public void DamageEffect()
+    {
+        var sequence = DOTween.Sequence();
+        var img = damageEffect;
+        var color = damageEffect.color;
+        color.a = 0;
+        sequence.Append(DOTween.ToAlpha(() => img.color, color => img.color = color, 0.8f, 0.1f));
+        sequence.Append(DOTween.ToAlpha(() => img.color, color => img.color = color, 0, 0.1f));
     }
 }
