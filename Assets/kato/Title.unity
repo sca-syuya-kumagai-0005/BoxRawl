@@ -133,7 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 15276831}
   m_Layer: 0
-  m_Name: wind
+  m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -542,7 +542,7 @@ GameObject:
   - component: {fileID: 420127673}
   - component: {fileID: 420127672}
   m_Layer: 0
-  m_Name: Square
+  m_Name: EnemyObj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -592,7 +592,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -1061,7 +1061,7 @@ MonoBehaviour:
   GroundObj: {fileID: 2102107311}
   tergetObj: {fileID: 1118124143}
   playerObj: {fileID: 1942319893}
-  EnemyObj: {fileID: 0}
+  EnemyObj: {fileID: 420127670}
 --- !u!4 &798753423
 Transform:
   m_ObjectHideFlags: 0
