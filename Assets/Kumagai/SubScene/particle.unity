@@ -263,6 +263,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4995501343729976500, guid: 51fa64880a1ab5d4eadd5c3be3d84863, type: 3}
+      propertyPath: EmissionModule.m_Bursts.Array.data[0].repeatInterval
+      value: 0.01
+      objectReference: {fileID: 0}
     - target: {fileID: 5356952088867034028, guid: 51fa64880a1ab5d4eadd5c3be3d84863, type: 3}
       propertyPath: m_Name
       value: Particle System
