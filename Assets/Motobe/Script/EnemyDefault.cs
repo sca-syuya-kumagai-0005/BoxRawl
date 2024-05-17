@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Unity.VisualScripting;
 using UnityEngine;
-//EnemyCheckの4がバグってる
+//EnemyCheckの4のキャラがバグってる
 public class EnemyDefault : MonoBehaviour
 {
     float posy;
@@ -136,9 +136,6 @@ public class EnemyDefault : MonoBehaviour
                 transform.position += target * speed * Time.deltaTime;
                
             }
-           
-
-
         }
     }
 
@@ -238,6 +235,11 @@ public class EnemyDefault : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+
+        if (other.gameObject.CompareTag("DestroyObj"))
+        {
+            Destroy(this.gameObject);
+        }
     }
   
     private void OnTriggerEnter2D(Collider2D other)
@@ -312,6 +314,11 @@ public class EnemyDefault : MonoBehaviour
         {
           
             Rota = false;
+        }
+
+        if (collision.gameObject.CompareTag("DestroyObj"))
+        {
+            Destroy(this.gameObject);
         }
     }
 
