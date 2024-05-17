@@ -13,6 +13,7 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private Text sceneName;
     [SerializeField] private GameObject mainCamera;
     [SerializeField] private float alphaSec;
+    [SerializeField] private GameObject statusWindow;
     private bool sceneChangeFlag;
     private string yesOrNo;
     [SerializeField]private string thisSceneName;
@@ -68,7 +69,7 @@ public class ButtonManager : MonoBehaviour
     //ステータス割り振りの時にはこのシーンはスキップする
     private void SceneCheck()
     {
-        if(sceneCheck)
+        if(sceneCheck&&sceneName.text=="Title"||sceneName.text=="Main Game")
         {
             sceneCheckBackGround.SetActive(true) ;
             if(Input.GetKeyDown(KeyCode.Z))
@@ -80,6 +81,10 @@ public class ButtonManager : MonoBehaviour
                 yesOrNo = "No";
                 sceneCheck = false;
             }
+        }
+        else if(sceneCheck&&sceneName.text=="StatusUp")
+        {
+            statusWindow.SetActive(true);
         }
         else
         {
