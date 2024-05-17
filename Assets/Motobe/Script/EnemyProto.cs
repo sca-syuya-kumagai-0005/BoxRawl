@@ -21,6 +21,7 @@ public class EnemyProto : MonoBehaviour
     bool Jump;
 
     public GameObject EnemySkin;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -39,46 +40,60 @@ public class EnemyProto : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (EnemyCheck <= 4)
+        if (PlayerMove.PlayerDead)
         {
-            posy = transform.position.y;
-            posx = transform.position.x;
-            posx += speed * Time.deltaTime * dir;
-            transform.position = new Vector3(posx, posy);
+            rb.velocity = new Vector2(0,0);
+            return;
         }
+        if (!PlayerMove.PlayerDead)
+        {
+            if (EnemyCheck <= 4)
+            {
+                posy = transform.position.y;
+                posx = transform.position.x;
+                posx += speed * Time.deltaTime * dir;
+                transform.position = new Vector3(posx, posy);
+            }
 
-        if (!OnGround)
-        {
-            Vector2 myGravity = new Vector2(0, -9.81f * 200 * Time.deltaTime);
-            rb.AddForce(myGravity);
-        }
-        if (right)
-        {
-            dir = 1;
-            rota = -1;
-        }
-        else
-        {
-            dir = -1;
-            rota = 1;
-        }
-        if (Jump)
-        {
-            rb.velocity = new Vector3(0, 13, 0);
-            Jump = false;
-        }
+            if (!OnGround)
+            {
+                Vector2 myGravity = new Vector2(0, -9.81f * 200 * Time.deltaTime);
+                rb.AddForce(myGravity);
+            }
+            if (right)
+            {
+                dir = 1;
+                rota = -1;
+            }
+            else
+            {
+                dir = -1;
+                rota = 1;
+            }
+            if (Jump)
+            {
+                rb.velocity = new Vector3(0, 13, 0);
+                Jump = false;
+            }
 
-        if (Rota)
-        {
-            EnemySkin.transform.Rotate(0, 0, 750 * rota * Time.deltaTime);
-        }
-        if (!Rota)
-        {
-            EnemySkin.transform.rotation = new Quaternion(0, 0, 0, 0);
+            if (Rota)
+            {
+                EnemySkin.transform.Rotate(0, 0, 750 * rota * Time.deltaTime);
+            }
+            if (!Rota)
+            {
+                EnemySkin.transform.rotation = new Quaternion(0, 0, 0, 0);
+            }
         }
     }
     private void OnTriggerStay2D(Collider2D other)
     {
+
+        if (PlayerMove.PlayerDead)
+        {
+            return;
+        }
+
         if (other.gameObject.CompareTag("Ground"))
         {
 
@@ -129,6 +144,10 @@ public class EnemyProto : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (PlayerMove.PlayerDead)
+        {
+            return;
+        }
         if (other.gameObject.CompareTag("Ground"))
         {
             transform.position = new Vector3(posx, posy - 0.2f);
@@ -161,6 +180,10 @@ public class EnemyProto : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
+        if (PlayerMove.PlayerDead)
+        {
+            return;
+        }
         if (other.gameObject.CompareTag("Ground") || other.gameObject.CompareTag("Button"))
         {
             Rota = true;

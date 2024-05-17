@@ -44,6 +44,18 @@ public class ProtoControllerEnemy : MonoBehaviour
     }
     private void ObjectEnemy(float x, float y)
     {
+        GameObject Enemy_prefab = Resources.Load<GameObject>("EnemyProto");
+        GameObject Enemy = Instantiate(Enemy_prefab, new Vector3(x, y, 0), Quaternion.identity);
+        return;
+    }
+    private void ObjectEnemy2(float x, float y)
+    {
+        GameObject Enemy_prefab = Resources.Load<GameObject>("EnemyProto2");
+        GameObject Enemy = Instantiate(Enemy_prefab, new Vector3(x, y, 0), Quaternion.identity);
+        return;
+    }
+    private void ObjectEnemy3(float x, float y)
+    {
         GameObject Enemy_prefab = Resources.Load<GameObject>("EnemyProto3");
         GameObject Enemy = Instantiate(Enemy_prefab, new Vector3(x, y, 0), Quaternion.identity);
         return;
@@ -58,12 +70,12 @@ public class ProtoControllerEnemy : MonoBehaviour
     }
     void SpawnDraw3()
     {
-        ObjectEnemy(0, 13);
+        ObjectEnemy2(0, 13);
     }
     void SpawnDraw4()
     {
-        ObjectEnemy(0, 13);
-        ObjectEnemy(25, 13);
-        ObjectEnemy(-25, 13);
+        ObjectEnemy2(0, 13);
+        ObjectEnemy3(25, 13);
+        ObjectEnemy3(-25, 13);
     }
 }

@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -69,6 +68,4 @@ public class EnemySpawner : MonoBehaviour
         ObjectEnemy(25, 13);
         ObjectEnemy(-25, 13);
     }
-
-   
 }

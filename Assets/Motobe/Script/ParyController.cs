@@ -9,14 +9,10 @@ public class ParyController : MonoBehaviour
 {
     public GameObject PlayerObject;
     public static bool parySet;
-
-    AudioSource audioSource;
-    public AudioClip parySound;
     // Start is called before the first frame update
     void Start()
     {
         parySet = false;
-        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -29,7 +25,7 @@ public class ParyController : MonoBehaviour
             {
                 PlayerMove.JumpCount = 1;
                 PlayerMove.paryCheck = true;
-                audioSource.PlayOneShot(parySound);
+                SEController.pary = true;
             }
         }
     }

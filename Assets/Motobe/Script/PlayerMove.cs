@@ -76,10 +76,13 @@ public class PlayerMove : MonoBehaviour
     //ダメージ演出
     public Image damageEffect;
 
+    //死亡判定
+    public static bool PlayerDead;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        PlayerDead = false;
         JumpCount = 0;
         blink = false;
         blinkCheck = false;
@@ -115,141 +118,149 @@ public class PlayerMove : MonoBehaviour
     void Update()
     {
         //Debug.Log(JumpCount);
-
-        if (!ButtonManager.sceneCheck)
+        if (!PlayerDead)
         {
-            if (startRota)
+            if (!ButtonManager.sceneCheck)
             {
-                //ジャンプ
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (startRota)
                 {
-                    if (JumpCount == 0)
+                    //ジャンプ
+                    if (Input.GetKeyDown(KeyCode.Space))
                     {
-                        //壁での連続ジャンプ防止
-                        if (OnWall)
+                        if (JumpCount == 0)
                         {
-                            if (!DoubleWall)
+                            //壁での連続ジャンプ防止
+                            if (OnWall)
+                            {
+                                if (!DoubleWall)
+                                {
+                                    rb.velocity = new Vector3(0, JumpForce, 0);
+                                    DoubleWall = true;
+                                    SEController.jump = true;
+                                }
+                            }
+                            else
                             {
                                 rb.velocity = new Vector3(0, JumpForce, 0);
-                                DoubleWall = true;
+                                SEController.jump = true;
                             }
+                        }
+
+                    }
+                    //壁めり込み防止
+                    if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
+                    {
+                        OnWall = false;
+                    }
+                    //左移動
+                    if (Input.GetKey(KeyCode.A))
+                    {
+                        PlayerSkin.rota = 1;
+                        //壁に触れたまま移動しない
+                        if (!OnWall)
+                        {
+                            //ヒップドロップ中に移動しない
+                            if (!Drop)
+                            {
+                                this.transform.position += new Vector3(-Speed * Time.deltaTime, 0, 0);
+                            }
+                        }
+                    }
+                    //右移動
+                    if (Input.GetKey(KeyCode.D))
+                    {
+                        PlayerSkin.rota = -1;
+                        //壁に触れたまま移動しない
+                        if (!OnWall)
+                        {
+                            //ヒップドロップ中に移動しない
+                            if (!Drop)
+                            {
+                                this.transform.position += new Vector3(Speed * Time.deltaTime, 0, 0);
+                            }
+                        }
+                    }
+                    //ヒップドロップ
+                    if (Input.GetKeyDown(KeyCode.S))
+                    {
+                        //空中にいるとき
+
+                        if (JumpCount == 1 || ParyController.parySet)
+                        {
+                            PlayerSkin.Rota = false;
+                            PlayerSkin.rota = 0;
+                            rb.velocity = new Vector3(0, -JumpForce * 2, 0);
+                            Drop = true;
+                            SEController.drop1 = true;
+                        }
+                    }
+                    //ジャンプ可能か確認用オブジェクトの表示非表示
+                    if (JumpCount == 0)
+                    {
+                        if (!DoubleWall)
+                        {
+                            JumpChecker.SetActive(true);
                         }
                         else
                         {
-                            rb.velocity = new Vector3(0, JumpForce, 0);
+                            JumpChecker.SetActive(false);
                         }
-                    }
-
-                }
-                //壁めり込み防止
-                if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
-                {
-                    OnWall = false;
-                }
-                //左移動
-                if (Input.GetKey(KeyCode.A))
-                {
-                    PlayerSkin.rota = 1;
-                    //壁に触れたまま移動しない
-                    if (!OnWall)
-                    {
-                        //ヒップドロップ中に移動しない
-                        if (!Drop)
-                        {
-                            this.transform.position += new Vector3(-Speed * Time.deltaTime, 0, 0);
-                        }
-                    }
-                }
-                //右移動
-                if (Input.GetKey(KeyCode.D))
-                {
-                    PlayerSkin.rota = -1;
-                    //壁に触れたまま移動しない
-                    if (!OnWall)
-                    {
-                        //ヒップドロップ中に移動しない
-                        if (!Drop)
-                        {
-                            this.transform.position += new Vector3(Speed * Time.deltaTime, 0, 0);
-                        }
-                    }
-                }
-                //ヒップドロップ
-                if (Input.GetKeyDown(KeyCode.S))
-                {
-                    //空中にいるとき
-
-                    if (JumpCount == 1||ParyController.parySet)
-                    {
-                        PlayerSkin.Rota = false;
-                        PlayerSkin.rota = 0;
-                        rb.velocity = new Vector3(0, -JumpForce * 2, 0);
-                        Drop = true;
-                    }
-                }
-                //ジャンプ可能か確認用オブジェクトの表示非表示
-                if (JumpCount == 0)
-                {
-                    if (!DoubleWall)
-                    {
-                        JumpChecker.SetActive(true);
                     }
                     else
                     {
                         JumpChecker.SetActive(false);
                     }
                 }
+                //ヒップドロップ中の判定
+                if (Drop)
+                {
+                    DropObject.SetActive(true);
+                }
                 else
                 {
-                    JumpChecker.SetActive(false);
+                    DropObject.SetActive(false);
                 }
+
+                
             }
-            //ヒップドロップ中の判定
-            if (Drop)
+
+        }
+        //ダメージを受けた時の点滅
+        if (blink)
+        {
+            //点滅
+            if (blinkCount > 0.05f)
             {
-                DropObject.SetActive(true);
+                if (blinkCheck)
+                {
+                    PlayerSkinObject.SetActive(true);
+                    blinkCheck = false;
+                    invincibleTimeCheck++;
+                }
+                else
+                {
+                    PlayerSkinObject.SetActive(false);
+                    blinkCheck = true;
+                    invincibleTimeCheck++;
+                }
+                if (invincibleTimeCheck >= invincibleTime)
+                {
+                    blink = false;
+                    invincibleTimeCheck = 0;
+                }
+                blinkCount = 0;
             }
             else
             {
-                DropObject.SetActive(false);
-            }
-
-            //ダメージを受けた時の点滅
-            if (blink)
-            {
-                //点滅
-                if (blinkCount > 0.05f)
-                {
-                    if (blinkCheck)
-                    {
-                        PlayerSkinObject.SetActive(true);
-                        blinkCheck = false;
-                        invincibleTimeCheck++;
-                    }
-                    else
-                    {
-                        PlayerSkinObject.SetActive(false);
-                        blinkCheck = true;
-                        invincibleTimeCheck++;
-                    }
-                    if (invincibleTimeCheck >= invincibleTime)
-                    {
-                        blink = false;
-                        invincibleTimeCheck = 0;
-                    }
-                    blinkCount = 0;
-                }
-                else
-                {
-                    blinkCount += Time.deltaTime;
-                }
-            }
-            if (!blink)
-            {
-                PlayerSkinObject.SetActive(true);
-                blinkCount = 0;
+                blinkCount += Time.deltaTime;
             }
         }
+        if (!blink)
+        {
+            PlayerSkinObject.SetActive(true);
+            blinkCount = 0;
+        }
+
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -274,6 +285,7 @@ public class PlayerMove : MonoBehaviour
             if (Drop)
             {
                 CameraMove.dropSway = true;
+                SEController.drop2 = true;
             }
 
         }
@@ -349,12 +361,15 @@ public class PlayerMove : MonoBehaviour
                             blink = true;
                             CameraMove.damageSway = true;
                             DamageEffect();
+                            SEController.damage = true;
                         }
                         else
                         {
-                            HpObject[0].SetActive(false);
-                            Hp =0;
-                            //死亡演出
+                            CameraMove.damageSway = true;
+                            DamageEffect();
+                            SEController.dead = true;
+                            Dead();
+                            blink = true;
                         }
                     }
                 }
@@ -406,5 +421,25 @@ public class PlayerMove : MonoBehaviour
         color.a = 0;
         sequence.Append(DOTween.ToAlpha(() => img.color, color => img.color = color, 0.8f, 0.1f));
         sequence.Append(DOTween.ToAlpha(() => img.color, color => img.color = color, 0, 0.1f));
+    }
+
+    public void Dead()
+    {
+        var sequence = DOTween.Sequence();
+        //PlayerSkinObject.SetActive(false);
+        HpObject[0].SetActive(false);
+        Hp = 0;
+        PlayerDead = true;
+        EnemySpawnner.SetActive(false);
+        Destroy(rb);
+        PlayerSkin.Rota = false;
+        sequence.AppendInterval(3.0f);
+        //ここにシーン転移のやつ
+        //sequence.AppendCallback(() => SceneChange());
+    }
+
+    public void SceneChange()
+    {
+
     }
 }
