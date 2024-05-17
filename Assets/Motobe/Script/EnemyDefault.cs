@@ -58,7 +58,7 @@ public class EnemyDefault : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(EnemyCheck<=4)
+        if(EnemyCheck<4)
         {
             posy = transform.position.y;
             posx = transform.position.x;
@@ -66,7 +66,7 @@ public class EnemyDefault : MonoBehaviour
             transform.position = new Vector3(posx, posy);
         }
         
-        if (!OnGround&&EnemyCheck!<=4)
+        if (!OnGround&&EnemyCheck<4)
         {
             Vector2 myGravity = new Vector2(0, -9.81f*200*Time.deltaTime);
             rb.AddForce(myGravity);
@@ -116,11 +116,18 @@ public class EnemyDefault : MonoBehaviour
                target = player.transform.position - this.gameObject.transform.position;//EnmeyからPlayerへのベクトル
                 target = target.normalized;//ベクトルの正規化
                 target.y = 0;
+                GameObject obj = this.gameObject;
+                float y = obj.transform.position.y;
+                if(obj.transform.position.y<player.transform.position.y)
+                {
+                    y += 1;
+                    this.gameObject.transform.position = new Vector3(obj.transform.position.x, y, 0);
+                }
                 transform.position += target * speed * Time.deltaTime;
                 Rota = false;
             
             }
-           else if(OnWall)
+            if(OnWall)
             {
                 target = player.transform.position - this.gameObject.transform.position;//EnmeyからPlayerへのベクトル
                 target = target.normalized;//ベクトルの正規化
@@ -129,7 +136,7 @@ public class EnemyDefault : MonoBehaviour
                 Rota = false;
               
             }
-            else
+            if(!OnWall&&!OnGround)
             {
                 target = player.transform.position - this.gameObject.transform.position;//EnmeyからPlayerへのベクトル
                 target = target.normalized;//ベクトルの正規化
