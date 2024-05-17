@@ -48,7 +48,7 @@ public class EnemyDefault : MonoBehaviour
         dir = 1;
         Jump = false;
         defaultSpeed = speed;
-        int random = Random.Range(4, 5);
+        int random = Random.Range(0, 6);
         player=GameObject.Find("Player").gameObject;
         target = player.transform.position-this.transform.position;
         EnemyCheck = random;
