@@ -46,7 +46,7 @@ public class PlayerMove : MonoBehaviour
     public static int JumpCount;
 
     //•Ç‚ÉG‚ê‚Ä‚¢‚é‚©‚Ì”»’è
-    private bool OnWall;
+   [SerializeField]private bool OnWall;
 
     //˜A‘±•ÇƒWƒƒƒ“ƒv‚ð‚µ‚È‚¢‚æ‚¤‚É‚·‚é
     private bool DoubleWall;
@@ -379,32 +379,41 @@ public class PlayerMove : MonoBehaviour
 
     public void StartCount()
     {
-        var sequence = DOTween.Sequence();
-        var img3 = Count[3];
-        var c3 = img3.color;
-        c3.a = 0.0f;
-        img3.color = c3;
-        var img2 = Count[2];
-        var c2 = img2.color;
-        c2.a = 0.0f;
-        img2.color = c2;
-        var img1 = Count[1];
-        var c1 = img1.color;
-        c1.a = 0.0f;
-        img1.color = c1;
-        var imgGo = Count[0];
-        var cGo = imgGo.color;
-        cGo.a = 0.0f;
-        imgGo.color = cGo;
-        sequence.Append(DOTween.ToAlpha(() => img3.color, color => img3.color = color, 1, 0.25f));
-        sequence.Append(DOTween.ToAlpha(() => img3.color, color => img3.color = color, 0, 0.25f));
-        sequence.Append(DOTween.ToAlpha(() => img2.color, color => img2.color = color, 1, 0.25f));
-        sequence.Append(DOTween.ToAlpha(() => img2.color, color => img2.color = color, 0, 0.25f));
-        sequence.Append(DOTween.ToAlpha(() => img1.color, color => img1.color = color, 1, 0.25f));
-        sequence.Append(DOTween.ToAlpha(() => img1.color, color => img1.color = color, 0, 0.25f));
-        sequence.Append(DOTween.ToAlpha(() => imgGo.color, color => imgGo.color = color, 1, 0.25f));
-        sequence.Append(DOTween.ToAlpha(() => imgGo.color, color => imgGo.color = color, 0, 0.25f));
-        sequence.AppendCallback(() => StartEnd());
+        if (SceneManager.GetActiveScene().name!="Main Game")
+        {
+            StartEnd();
+            return;
+        }
+        else
+        {
+            var sequence = DOTween.Sequence();
+            var img3 = Count[3];
+            var c3 = img3.color;
+            c3.a = 0.0f;
+            img3.color = c3;
+            var img2 = Count[2];
+            var c2 = img2.color;
+            c2.a = 0.0f;
+            img2.color = c2;
+            var img1 = Count[1];
+            var c1 = img1.color;
+            c1.a = 0.0f;
+            img1.color = c1;
+            var imgGo = Count[0];
+            var cGo = imgGo.color;
+            cGo.a = 0.0f;
+            imgGo.color = cGo;
+            sequence.Append(DOTween.ToAlpha(() => img3.color, color => img3.color = color, 1, 0.25f));
+            sequence.Append(DOTween.ToAlpha(() => img3.color, color => img3.color = color, 0, 0.25f));
+            sequence.Append(DOTween.ToAlpha(() => img2.color, color => img2.color = color, 1, 0.25f));
+            sequence.Append(DOTween.ToAlpha(() => img2.color, color => img2.color = color, 0, 0.25f));
+            sequence.Append(DOTween.ToAlpha(() => img1.color, color => img1.color = color, 1, 0.25f));
+            sequence.Append(DOTween.ToAlpha(() => img1.color, color => img1.color = color, 0, 0.25f));
+            sequence.Append(DOTween.ToAlpha(() => imgGo.color, color => imgGo.color = color, 1, 0.25f));
+            sequence.Append(DOTween.ToAlpha(() => imgGo.color, color => imgGo.color = color, 0, 0.25f));
+            sequence.AppendCallback(() => StartEnd());
+        }
+       
     }
 
     public void StartEnd()

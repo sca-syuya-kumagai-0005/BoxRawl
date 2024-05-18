@@ -12,6 +12,8 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private GameObject Player;
     [SerializeField] private Text sceneName;
     [SerializeField] private GameObject mainCamera;
+    [SerializeField] private float alphaSec;
+    [SerializeField] private GameObject statusWindow;
     private bool sceneChangeFlag;
     private string yesOrNo;
     [SerializeField]private string thisSceneName;
@@ -23,6 +25,7 @@ public class ButtonManager : MonoBehaviour
     {
         sceneCheck = false;
         yesOrNo = "No";
+        StartCoroutine(ButtonStart());
     }
 
     // Update is called once per frame
@@ -66,7 +69,7 @@ public class ButtonManager : MonoBehaviour
     //ステータス割り振りの時にはこのシーンはスキップする
     private void SceneCheck()
     {
-        if(sceneCheck)
+        if(sceneCheck&&sceneName.text=="Title"||sceneName.text=="Main Game")
         {
             sceneCheckBackGround.SetActive(true) ;
             if(Input.GetKeyDown(KeyCode.Z))
@@ -78,6 +81,10 @@ public class ButtonManager : MonoBehaviour
                 yesOrNo = "No";
                 sceneCheck = false;
             }
+        }
+        else if(sceneCheck&&sceneName.text=="StatusUp")
+        {
+            statusWindow.SetActive(true);
         }
         else
         {
@@ -105,5 +112,21 @@ public class ButtonManager : MonoBehaviour
         this.gameObject.transform.GetComponent<BoxCollider2D>().isTrigger = true;
         yield return new WaitForSeconds(2f);
         SceneManager.LoadScene(thisSceneName);
+    }
+
+    float alpha = 0;
+    private IEnumerator ButtonStart()
+    {
+        while (this.transform.gameObject.GetComponent<SpriteRenderer>().color.a <= 1)
+        {
+            Color bc = this.GetComponent<SpriteRenderer>().color;
+            Color gc=sceneGround.GetComponent<SpriteRenderer>().color;
+            alpha += Time.deltaTime/alphaSec;
+            this.transform.gameObject.GetComponent<SpriteRenderer>().color = new Color(bc.r, bc.g, bc.b, alpha);
+            sceneGround.transform.gameObject.GetComponent<SpriteRenderer>().color=new Color(gc.r, gc.g, gc.b, alpha);
+            Debug.Log("呼ばれています");
+            yield return new WaitForEndOfFrame();
+        }
+      
     }
 }
