@@ -34,13 +34,13 @@ public class TitleManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Return))
         {
             isStart = true;
-            //startGame();
+            startGame();
         }
 
         //“G‚Ì“®‚«
-        EnemyObj.transform.position += new Vector3(-4.0f, 0, 0) * Time.deltaTime;
         if (!isStart)
         {
+            EnemyObj.transform.position += new Vector3(-4.0f, 0, 0) * Time.deltaTime;
         }
         if(EnemyObj.transform.position.x < -11)
         {
@@ -61,7 +61,7 @@ public class TitleManager : MonoBehaviour
 
             if(isStart)
             {
-                startGame();
+                //startGame();
             }
         }
     }

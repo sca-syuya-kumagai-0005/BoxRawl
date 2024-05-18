@@ -65,9 +65,6 @@ public class FlyEnemy : MonoBehaviour
         Bullet = Instantiate(BulletPrefab,BulletPos,Quaternion.identity);
         BulletRg = Bullet.GetComponent<Rigidbody2D>();
         BulletRg.AddForce(BulletDir * 400);
-
-        Destroy(Bullet , 1.0f);
-
     }
 
     public void Move()
@@ -81,7 +78,7 @@ public class FlyEnemy : MonoBehaviour
             addPos_X = 2;
         }
 
-        if (this.gameObject.transform.position.y < 10)
+        if (this.gameObject.transform.position.y > 10)
         {
             addPos_Y = -2;
         }
@@ -89,9 +86,9 @@ public class FlyEnemy : MonoBehaviour
         {
             addPos_Y = Random.RandomRange(-2, 2);
         }
-        else
+        else if (this.gameObject.transform.position.y < 0)
         {
-            addPos_Y = 1;
+            addPos_Y = 2;
         }
 
         this.gameObject.transform.DOMove(new Vector2( this.gameObject.transform.position.x + addPos_X,
