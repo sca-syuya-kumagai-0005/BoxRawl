@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using Unity.VisualScripting;
 public class PlayerMove : MonoBehaviour
 {
     //Rigidbody
@@ -79,9 +80,13 @@ public class PlayerMove : MonoBehaviour
     //死亡判定
     public static bool PlayerDead;
 
+    //経験値倍率
+    public static int EXPUP;
+
     // Start is called before the first frame update
     void Start()
     {
+        EXPUP = 1;
         PlayerDead = false;
         JumpCount = 0;
         blink = false;
@@ -118,113 +123,12 @@ public class PlayerMove : MonoBehaviour
     void Update()
     {
         //Debug.Log(JumpCount);
-        if (!PlayerDead)
+
+        if (EXPUP >= 3)
         {
-            if (!ButtonManager.sceneCheck)
-            {
-                if (startRota)
-                {
-                    //ジャンプ
-                    if (Input.GetKeyDown(KeyCode.Space))
-                    {
-                        if (JumpCount == 0)
-                        {
-                            //壁での連続ジャンプ防止
-                            if (OnWall)
-                            {
-                                if (!DoubleWall)
-                                {
-                                    rb.velocity = new Vector3(0, JumpForce, 0);
-                                    DoubleWall = true;
-                                    SEController.jump = true;
-                                }
-                            }
-                            else
-                            {
-                                rb.velocity = new Vector3(0, JumpForce, 0);
-                                SEController.jump = true;
-                            }
-                        }
-
-                    }
-                    //壁めり込み防止
-                    if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
-                    {
-                        OnWall = false;
-                    }
-                    //左移動
-                    if (Input.GetKey(KeyCode.A))
-                    {
-                        PlayerSkin.rota = 1;
-                        //壁に触れたまま移動しない
-                        if (!OnWall)
-                        {
-                            //ヒップドロップ中に移動しない
-                            if (!Drop)
-                            {
-                                this.transform.position += new Vector3(-Speed * Time.deltaTime, 0, 0);
-                            }
-                        }
-                    }
-                    //右移動
-                    if (Input.GetKey(KeyCode.D))
-                    {
-                        PlayerSkin.rota = -1;
-                        //壁に触れたまま移動しない
-                        if (!OnWall)
-                        {
-                            //ヒップドロップ中に移動しない
-                            if (!Drop)
-                            {
-                                this.transform.position += new Vector3(Speed * Time.deltaTime, 0, 0);
-                            }
-                        }
-                    }
-                    //ヒップドロップ
-                    if (Input.GetKeyDown(KeyCode.S))
-                    {
-                        //空中にいるとき
-
-                        if (JumpCount == 1 || ParyController.parySet)
-                        {
-                            PlayerSkin.Rota = false;
-                            PlayerSkin.rota = 0;
-                            rb.velocity = new Vector3(0, -JumpForce * 2, 0);
-                            Drop = true;
-                            SEController.drop1 = true;
-                        }
-                    }
-                    //ジャンプ可能か確認用オブジェクトの表示非表示
-                    if (JumpCount == 0)
-                    {
-                        if (!DoubleWall)
-                        {
-                            JumpChecker.SetActive(true);
-                        }
-                        else
-                        {
-                            JumpChecker.SetActive(false);
-                        }
-                    }
-                    else
-                    {
-                        JumpChecker.SetActive(false);
-                    }
-                }
-                //ヒップドロップ中の判定
-                if (Drop)
-                {
-                    DropObject.SetActive(true);
-                }
-                else
-                {
-                    DropObject.SetActive(false);
-                }
-
-                
-            }
-
+            EXPUP = 3;
         }
+
         //ダメージを受けた時の点滅
         if (blink)
         {
@@ -261,6 +165,109 @@ public class PlayerMove : MonoBehaviour
             blinkCount = 0;
         }
 
+        if (PlayerDead)
+        {
+            return;
+        }
+        if (!ButtonManager.sceneCheck)
+        {
+            if (startRota)
+            {
+                //ジャンプ
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    if (JumpCount == 0)
+                    {
+                        //壁での連続ジャンプ防止
+                        if (OnWall)
+                        {
+                            if (!DoubleWall)
+                            {
+                                rb.velocity = new Vector3(0, JumpForce, 0);
+                                DoubleWall = true;
+                                SEController.jump = true;
+                            }
+                        }
+                        else
+                        {
+                            rb.velocity = new Vector3(0, JumpForce, 0);
+                            SEController.jump = true;
+                        }
+                    }
+                }
+                //壁めり込み防止
+                if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
+                {
+                    OnWall = false;
+                }
+                //左移動
+                if (Input.GetKey(KeyCode.A))
+                {
+                    
+                    //壁に触れたまま移動しない
+                    if (!OnWall)
+                    {
+                        //ヒップドロップ中に移動しない
+                        if (!Drop)
+                        {
+                            PlayerSkin.rota = 1;
+                            this.transform.position += new Vector3(-Speed * Time.deltaTime, 0, 0);
+                        }
+                    }
+                }
+                //右移動
+                if (Input.GetKey(KeyCode.D))
+                {
+                    
+                    //壁に触れたまま移動しない
+                    if (!OnWall)
+                    {
+                        //ヒップドロップ中に移動しない
+                        if (!Drop)
+                        {
+                            PlayerSkin.rota = -1;
+                            this.transform.position += new Vector3(Speed * Time.deltaTime, 0, 0);
+                        }
+                    }
+                }
+                //ヒップドロップ
+                if (Input.GetKeyDown(KeyCode.S))
+                {
+                    //空中にいるとき
+
+                    if (JumpCount == 1 || ParyController.parySet)
+                    {
+                        DropSystem();
+                        
+                    }
+                }
+                //ジャンプ可能か確認用オブジェクトの表示非表示
+                if (JumpCount == 0)
+                {
+                    if (!DoubleWall)
+                    {
+                        JumpChecker.SetActive(true);
+                    }
+                    else
+                    {
+                        JumpChecker.SetActive(false);
+                    }
+                }
+                else
+                {
+                    JumpChecker.SetActive(false);
+                }
+            }
+            //ヒップドロップ中の判定
+            if (Drop)
+            {
+                DropObject.SetActive(true);
+            }
+            else
+            {
+                DropObject.SetActive(false);
+            }
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -287,7 +294,7 @@ public class PlayerMove : MonoBehaviour
                 CameraMove.dropSway = true;
                 SEController.drop2 = true;
             }
-
+            EXPUP = 1;
         }
         if(other.gameObject.CompareTag("Button"))
         {
@@ -375,6 +382,27 @@ public class PlayerMove : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void DropSystem()
+    {
+        var sequence = DOTween.Sequence();
+
+        
+        rb.velocity = new Vector3(0, JumpForce, 0);
+        Drop = true;
+        SEController.drop1 = true;
+        PlayerSkin.rota *= -2;
+        sequence.AppendInterval(0.2f);
+        sequence.AppendCallback(() => DropSystem2());
+    }
+    public void DropSystem2()
+    {
+        PlayerSkin.Rota = false;
+        PlayerSkin.rota =0;
+        rb.velocity = new Vector3(0, -JumpForce *  2, 0);
+        
+        
     }
 
     public void StartCount()
