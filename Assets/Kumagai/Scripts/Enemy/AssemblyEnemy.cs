@@ -55,12 +55,12 @@ public class AssemblyEnemy : MonoBehaviour
         {
             moveVecY *= -1;
         }
-        int b = UnityEngine.Random.Range(0, 90);
+        int b = UnityEngine.Random.Range(0, 120);
         if( b==0)
         {
             moveVecX *= -1;
         }
-        int a = UnityEngine.Random.Range(0, 90);
+        int a = UnityEngine.Random.Range(0, 120);
         if (a == 0)
         {
             moveVecY*= -1;   
