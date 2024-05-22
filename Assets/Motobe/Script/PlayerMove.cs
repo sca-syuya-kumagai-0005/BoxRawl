@@ -387,11 +387,13 @@ public class PlayerMove : MonoBehaviour
     public void DropSystem()
     {
         var sequence = DOTween.Sequence();
-
-        
         rb.velocity = new Vector3(0, JumpForce, 0);
         Drop = true;
         SEController.drop1 = true;
+        if (PlayerSkin.rota==0)
+        {
+            PlayerSkin.rota = 1;
+        }
         PlayerSkin.rota *= -2;
         sequence.AppendInterval(0.2f);
         sequence.AppendCallback(() => DropSystem2());
@@ -401,8 +403,6 @@ public class PlayerMove : MonoBehaviour
         PlayerSkin.Rota = false;
         PlayerSkin.rota =0;
         rb.velocity = new Vector3(0, -JumpForce *  2, 0);
-        
-        
     }
 
     public void StartCount()

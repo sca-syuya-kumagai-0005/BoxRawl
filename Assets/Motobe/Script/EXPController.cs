@@ -9,6 +9,7 @@ public class EXPController : MonoBehaviour
     public float exp;
     public Image EXPGage;
     public Image EXPGage2;
+    public GameObject LevelUpSet;
     int expup;
 
     // Start is called before the first frame update
@@ -17,6 +18,7 @@ public class EXPController : MonoBehaviour
         EXP = 0;
         exp = 0;
         expup = 0;
+        LevelUpSet.SetActive(false);
     }
 
     // Update is called once per frame
@@ -39,6 +41,7 @@ public class EXPController : MonoBehaviour
         {
             exp -= 100;
             EXP -= 100;
+            LevelUpSet.SetActive(true);
             PlayerMove.PlayerDead = true;
         }
         EXPGage.rectTransform.sizeDelta = new Vector2(EXP * 19, 75);
