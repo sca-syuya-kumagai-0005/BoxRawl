@@ -15,6 +15,7 @@ TagManager:
   - move03
   - move04
   - DestroyObj
+  - OFF
   layers:
   - Default
   - TransparentFX

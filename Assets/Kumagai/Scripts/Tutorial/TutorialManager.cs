@@ -26,7 +26,7 @@ public class TutorialManager : MonoBehaviour
     {
         Vector3 pos = this.transform.position;
         float x = pos.x;
-        if (count == 3)
+        if (count == 2)
         {
             moveVec = !moveVec;
             count = 0;
@@ -46,6 +46,7 @@ public class TutorialManager : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -54,10 +55,29 @@ public class TutorialManager : MonoBehaviour
         {
             count++;
             //this.transform.position = new Vector3(this.transform.position.x, collision.collider.transform.position.y + 1, 0);
-            rb.AddForce(new Vector3(0, 100, 0));
+            rb.AddForce(new Vector3(0, 300, 0));
             OnGround = true;
             Debug.Log("A");
         }
+        if (collision.GetComponent<Collider2D>().CompareTag("Player"))
+        {
+            if (PlayerMove.Drop)
+            {
+              this.gameObject.SetActive(false);
+            }
+
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.GetComponent<Collider2D>().CompareTag("Ground"))
+        {
+            rb.AddForce(new Vector3(0, 100f, 0));
+            OnGround = true;
+            Debug.Log("B");
+        }
+       
     }
 
 }
