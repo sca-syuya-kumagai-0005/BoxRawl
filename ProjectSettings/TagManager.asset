@@ -3,27 +3,15 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - Ground
-  - Wall
-  - Button
-  - Enemy
-  - Drop
-  - Pary
-  - move01
-  - move02
-  - move03
-  - move04
-  - DestroyObj
-  - Ceiling
+  tags: []
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Player
+  - 
   - Water
   - UI
-  - Enemy
+  - 
   - 
   - 
   - 
