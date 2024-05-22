@@ -1114,7 +1114,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7194087395818242512, guid: f08207d251672a84daaf10c6413c1646, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.25
+      value: 7.6
       objectReference: {fileID: 0}
     - target: {fileID: 7194087395818242512, guid: f08207d251672a84daaf10c6413c1646, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1148,10 +1148,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8827783169739197737, guid: f08207d251672a84daaf10c6413c1646, type: 3}
+      propertyPath: m_GravityScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8833631537820832151, guid: f08207d251672a84daaf10c6413c1646, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 3622443926713687417, guid: f08207d251672a84daaf10c6413c1646, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5121024294189907850, guid: f08207d251672a84daaf10c6413c1646, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1159815442}
   m_SourcePrefab: {fileID: 100100000, guid: f08207d251672a84daaf10c6413c1646, type: 3}
 --- !u!1 &299689744
 GameObject:
@@ -3076,6 +3088,25 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!1 &1159815441 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5121024294189907850, guid: f08207d251672a84daaf10c6413c1646, type: 3}
+  m_PrefabInstance: {fileID: 255227824}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1159815442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1159815441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03bcb312e71e99040a87e856114737ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+  OnGround: 0
 --- !u!1 &1164656189
 GameObject:
   m_ObjectHideFlags: 0
