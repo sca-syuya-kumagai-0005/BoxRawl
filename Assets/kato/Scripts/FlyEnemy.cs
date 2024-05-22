@@ -22,6 +22,7 @@ public class FlyEnemy : MonoBehaviour
     int addPos_X;
     int addPos_Y;
 
+    int MoveNum;
     void Start()
     {
         PlayerObj = GameObject.FindWithTag("Player");
@@ -29,6 +30,8 @@ public class FlyEnemy : MonoBehaviour
         isMove = true;
         isAttack = true;
         timer = 0;
+
+        MoveNum = 0;
     }
 
     void Update()
@@ -69,26 +72,36 @@ public class FlyEnemy : MonoBehaviour
 
     public void Move()
     {
-        if(this.gameObject.transform.position.x - PlayerObj.transform.position.x > 0)
-        {
-            addPos_X = -2;
-        }
-        else
-        {
-            addPos_X = 2;
-        }
+        MoveNum = Random.RandomRange(1, 2);
 
-        if (this.gameObject.transform.position.y > 10)
+        if(MoveNum == 1)
         {
-            addPos_Y = -2;
+            if (this.gameObject.transform.position.x - PlayerObj.transform.position.x > 0)
+            {
+                addPos_X = -2;
+            }
+            else
+            {
+                addPos_X = 2;
+            }
+
+            if (this.gameObject.transform.position.y > 10)
+            {
+                addPos_Y = -2;
+            }
+            else if (this.gameObject.transform.position.y > 0)
+            {
+                addPos_Y = Random.RandomRange(-2, 2);
+            }
+            else if (this.gameObject.transform.position.y < 0)
+            {
+                addPos_Y = 2;
+            }
         }
-        else if(this.gameObject.transform.position.y > 0)
+        else if(MoveNum == 2)
         {
-            addPos_Y = Random.RandomRange(-2, 2);
-        }
-        else if (this.gameObject.transform.position.y < 0)
-        {
-            addPos_Y = 2;
+            addPos_X = Random.RandomRange(-2, 2);
+            addPos_Y = Random.RandomRange(1, 2);
         }
 
         this.gameObject.transform.DOMove(new Vector2( this.gameObject.transform.position.x + addPos_X,
