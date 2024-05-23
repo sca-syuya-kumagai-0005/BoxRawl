@@ -258,12 +258,8 @@ public class PlayerMove : MonoBehaviour
                     JumpChecker.SetActive(false);
                 }
             }
-            //ヒップドロップ中の判定
-            if (Drop)
-            {
-                DropObject.SetActive(true);
-            }
-            else
+            //ヒップドロップの判定
+            if (!Drop)
             {
                 DropObject.SetActive(false);
             }
@@ -400,6 +396,7 @@ public class PlayerMove : MonoBehaviour
     }
     public void DropSystem2()
     {
+        DropObject.SetActive(true);
         PlayerSkin.Rota = false;
         PlayerSkin.rota =0;
         rb.velocity = new Vector3(0, -JumpForce *  2, 0);
@@ -456,8 +453,12 @@ public class PlayerMove : MonoBehaviour
         var img = damageEffect;
         var color = damageEffect.color;
         color.a = 0;
-        sequence.Append(DOTween.ToAlpha(() => img.color, color => img.color = color, 0.8f, 0.1f));
-        sequence.Append(DOTween.ToAlpha(() => img.color, color => img.color = color, 0, 0.1f));
+        for (int i=DefaultHp+PlusHp;i>Hp;i--)
+        {
+            sequence.Append(DOTween.ToAlpha(() => img.color, color => img.color = color, 0.8f, 0.1f));
+            sequence.Append(DOTween.ToAlpha(() => img.color, color => img.color = color, 0, 0.1f));
+        }
+        
     }
 
     public void Dead()
