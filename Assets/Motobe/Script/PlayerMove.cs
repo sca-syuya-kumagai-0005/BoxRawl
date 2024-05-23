@@ -234,12 +234,15 @@ public class PlayerMove : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.S))
                 {
                     //空中にいるとき
-
-                    if (JumpCount == 1 || ParyController.parySet)
+                    if (!Drop)
                     {
-                        DropSystem();
-                        
+                        if (JumpCount == 1 || ParyController.parySet && JumpCount == 1)
+                        {
+                            DropSystem();
+
+                        }
                     }
+                    
                 }
                 //ジャンプ可能か確認用オブジェクトの表示非表示
                 if (JumpCount == 0)

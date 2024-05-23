@@ -48,6 +48,12 @@ public class ProtoControllerEnemy : MonoBehaviour
         GameObject Enemy = Instantiate(Enemy_prefab, new Vector3(x, y, 0), Quaternion.identity);
         return;
     }
+    private void ObjectEnemy1(float x, float y)
+    {
+        GameObject Enemy_prefab = Resources.Load<GameObject>("EnemyProto1");
+        GameObject Enemy = Instantiate(Enemy_prefab, new Vector3(x, y, 0), Quaternion.identity);
+        return;
+    }
     private void ObjectEnemy2(float x, float y)
     {
         GameObject Enemy_prefab = Resources.Load<GameObject>("EnemyProto2");
@@ -62,20 +68,69 @@ public class ProtoControllerEnemy : MonoBehaviour
     }
     void SpawnDraw()
     {
-        ObjectEnemy(25, 13);
+        int random = Random.Range(0, 4);
+        if (random == 0)
+        {
+            ObjectEnemy(25, 13);
+        }
+        if (random == 1)
+        {
+            ObjectEnemy1(25, 13);
+        }
+        if (random == 2)
+        {
+            ObjectEnemy2(25, 13);
+        }
+        if (random == 3)
+        {
+            ObjectEnemy3(25, 13);
+        }
+
     }
     void SpawnDraw2()
     {
-        ObjectEnemy(-25, 13);
+        int random = Random.Range(0, 4);
+        if (random == 0)
+        {
+            ObjectEnemy(-25, 13);
+        }
+        if (random == 1)
+        {
+            ObjectEnemy1(-25, 13);
+        }
+        if (random == 2)
+        {
+            ObjectEnemy2(-25, 13);
+        }
+        if (random == 3)
+        {
+            ObjectEnemy3(-25, 13);
+        }
     }
     void SpawnDraw3()
     {
-        ObjectEnemy2(0, 13);
+        int random = Random.Range(0, 4);
+        if (random == 0)
+        {
+            ObjectEnemy(0, 13);
+        }
+        if (random == 1)
+        {
+            ObjectEnemy1(0, 13);
+        }
+        if (random == 2)
+        {
+            ObjectEnemy2(0, 13);
+        }
+        if (random == 3)
+        {
+            ObjectEnemy3(0, 13);
+        }
     }
     void SpawnDraw4()
     {
-        ObjectEnemy2(0, 13);
-        ObjectEnemy3(25, 13);
-        ObjectEnemy3(-25, 13);
+        SpawnDraw();
+        SpawnDraw2();
+        SpawnDraw3();
     }
 }
