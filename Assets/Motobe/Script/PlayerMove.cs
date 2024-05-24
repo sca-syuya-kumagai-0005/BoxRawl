@@ -98,7 +98,7 @@ public class PlayerMove : MonoBehaviour
         invincibleTimeCheck = 0;
         startRota = false;
         EnemySpawnner.SetActive(false);
-
+        
         //ステータスを入力
         JumpForce = DefaultJumpForce + PlusJumpForce;
         Speed = DefaultSpeed + PlusSpeed;
@@ -321,6 +321,7 @@ public class PlayerMove : MonoBehaviour
         //地面に触れている間
         if (collision.gameObject.CompareTag("Ground")|| collision.gameObject.CompareTag("Button"))
         {
+            Time.timeScale = 1.0f;
             Drop = false;
             PlayerSkin.rota = 0;
             PlayerSkin.Rota = false;
@@ -343,6 +344,7 @@ public class PlayerMove : MonoBehaviour
         //地面から離れたとき
         if (collision.gameObject.CompareTag("Ground")|| collision.gameObject.CompareTag("Button"))
         {
+            //Time.timeScale = 0.1f;
             JumpCount = 1;
             if(ParyObject!=null)
             ParyObject.SetActive(true);
@@ -447,6 +449,7 @@ public class PlayerMove : MonoBehaviour
     public void StartEnd()
     {
         startRota = true;
+        
         EnemySpawnner.SetActive(true);
     }
 

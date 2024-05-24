@@ -90,9 +90,8 @@ public class EnemyProto1 : MonoBehaviour
         if (other.gameObject.CompareTag("Drop"))
         {
             var sequence = DOTween.Sequence();
-            EXPController.EXP += 2 * PlayerMove.EXPUP;
+            EXPController.EXP += 3 * PlayerMove.EXPUP;
             PlayerMove.EXPUP += 1;
-            sequence.AppendInterval(0.1f);
             sequence.AppendCallback(() => dest());
         }
 
@@ -160,13 +159,28 @@ public class EnemyProto1 : MonoBehaviour
     }
     void SpawnDraw()
     {
-        for(int i = 1; i < 5; i++)
+        int random = Random.Range(0, 17);
+        int rand=0;
+        if (random <= 3){//0123
+            rand = 3;
+        } 
+        else if(random<=10)//45678910
+        {
+            rand = 4;
+        }
+        else if (random <= 15)//1112131415
+        {
+            rand = 5;
+        }
+        else if (random == 16)//
+        {
+            rand = 6;
+        }
+        Debug.Log(random);
+        for (int i = 1; i < rand; i++)
         {
             ObjectEnemy(this.transform.position.x, this.transform.position.y + i);
         }
         
     }
-
-    
-
 }

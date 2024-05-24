@@ -23,11 +23,11 @@ public class EnemyChildren : MonoBehaviour
         }
         if (other.gameObject.CompareTag("Drop"))
         {
-            Debug.Log("a");
-            EXPController.EXP +=-1+ 1 * PlayerMove.EXPUP;
+            this.gameObject.transform.parent = null;
+            EXPController.EXP +=1 * PlayerMove.EXPUP;
             PlayerMove.EXPUP += 1;
 
-            Destroy(this);
+            Destroy(this.gameObject);
         }
 
         if (other.gameObject.CompareTag("DestroyObj"))

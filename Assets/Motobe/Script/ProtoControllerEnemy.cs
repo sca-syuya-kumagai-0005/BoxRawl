@@ -9,8 +9,8 @@ public class ProtoControllerEnemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SpawnDraw();
-        SpawnDraw2();
+        SpawnDraw3();
+        SpawnDraw3();
     }
 
     // Update is called once per frame
