@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 15
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 0, b: 0.6045394, a: 1}
+  m_Color: {r: 1, g: 0.7127471, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -96,11 +96,10 @@ GameObject:
   - component: {fileID: 7194087395818242512}
   - component: {fileID: 1532895428101846152}
   - component: {fileID: 8833631537820832151}
-  - component: {fileID: 6057320954413535571}
-  - component: {fileID: 6228735201076507958}
-  - component: {fileID: 4626085224229881829}
+  - component: {fileID: 8827783169739197737}
+  - component: {fileID: 6547850927120092001}
   m_Layer: 2
-  m_Name: EnemyProto3
+  m_Name: EnemyProto1
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -219,20 +218,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &6057320954413535571
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5121024294189907850}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8846a5d609320b148b7fdae563c6c0fd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  EnemySkin: {fileID: 6941964656783628917}
---- !u!50 &6228735201076507958
+--- !u!50 &8827783169739197737
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -258,8 +244,8 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
---- !u!114 &4626085224229881829
+  m_Constraints: 4
+--- !u!114 &6547850927120092001
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -268,14 +254,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 5121024294189907850}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00e6f0d2691927d49bae555364b5fd43, type: 3}
+  m_Script: {fileID: 11500000, guid: 04c382e263367e84ea4d9378306e6e4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   OnGround: 0
   OnWall: 0
-  speed: 1
-  EnemyCheck: 0
-  EnemySkin: {fileID: 6941964656783628917}
+  speed: 3
+  EnemySkin: {fileID: 0}
 --- !u!1 &6941964656783628917
 GameObject:
   m_ObjectHideFlags: 0
@@ -353,7 +338,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 11
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 0, b: 0.6045394, a: 1}
+  m_Color: {r: 1, g: 0.7127471, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -521,7 +506,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 16
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -606,7 +591,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 13
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 0, b: 0.6045394, a: 1}
+  m_Color: {r: 1, g: 0.7127471, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -690,7 +675,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 12
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

@@ -33,17 +33,17 @@ public class CameraMove : MonoBehaviour
     {
         var sequence = DOTween.Sequence();
 
-        sequence.Append(this.transform.DOMoveY(Player.transform.position.y + -1f + 2f, 0.025f));
+        sequence.Append(this.transform.DOMoveY(Player.transform.position.y + -1f + 3f, 0.025f));
         sequence.Join  (this.transform.DOMoveX(Player.transform.position.x - 2, 0.025f));
-        sequence.Append(this.transform.DOMoveY(Player.transform.position.y + 1f + 2f, 0.025f));
+        sequence.Append(this.transform.DOMoveY(Player.transform.position.y + 1f + 3f, 0.025f));
         sequence.Join  (this.transform.DOMoveX(Player.transform.position.x - 1.5f, 0.025f));
-        sequence.Append(this.transform.DOMoveY(Player.transform.position.y + -0.75f + 2f, 0.025f));
+        sequence.Append(this.transform.DOMoveY(Player.transform.position.y + -0.75f + 3f, 0.025f));
         sequence.Join  (this.transform.DOMoveX(Player.transform.position.x + 1f, 0.025f));
-        sequence.Append(this.transform.DOMoveY(Player.transform.position.y + 0.5f + 2f, 0.025f));
+        sequence.Append(this.transform.DOMoveY(Player.transform.position.y + 0.5f + 3f, 0.025f));
         sequence.Join  (this.transform.DOMoveX(Player.transform.position.x + 0.5f, 0.025f));
-        sequence.Append(this.transform.DOMoveY(Player.transform.position.y + -0.25f + 2f, 0.025f));
+        sequence.Append(this.transform.DOMoveY(Player.transform.position.y + -0.25f + 3f, 0.025f));
         sequence.Join  (this.transform.DOMoveX(Player.transform.position.x - 0.25f, 0.025f));
-        sequence.Append(this.transform.DOMoveY(Player.transform.position.y + 0f + 2f, 0.025f));
+        sequence.Append(this.transform.DOMoveY(Player.transform.position.y + 0f + 3f, 0.025f));
         sequence.Join  (this.transform.DOMoveX(Player.transform.position.x + 0f, 0.025f));
         sequence.AppendCallback(() => normal());
     }
@@ -51,7 +51,7 @@ public class CameraMove : MonoBehaviour
     public void normal()
     {
         var sequence = DOTween.Sequence();
-        sequence.Append(this.transform.DOMoveY(Player.transform.position.y + 0f + 2f, 0f));
+        sequence.Append(this.transform.DOMoveY(Player.transform.position.y + 0f + 3f, 0f));
         sequence.Join(this.transform.DOMoveX(Player.transform.position.x + 0f, 0f));
     }
 

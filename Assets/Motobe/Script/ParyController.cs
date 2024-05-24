@@ -9,27 +9,25 @@ public class ParyController : MonoBehaviour
 {
     public GameObject PlayerObject;
     public static bool parySet;
-
-    AudioSource audioSource;
-    public AudioClip parySound;
     // Start is called before the first frame update
     void Start()
     {
         parySet = false;
-        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        
         transform.position = PlayerObject.transform.position;
         if (parySet)
         {
+
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 PlayerMove.JumpCount = 1;
                 PlayerMove.paryCheck = true;
-                audioSource.PlayOneShot(parySound);
+                SEController.pary = true;
             }
         }
     }
@@ -38,7 +36,7 @@ public class ParyController : MonoBehaviour
     {
         if (other.gameObject.tag == "Enemy")
         {
-            PlayerMove.JumpCount = 0;
+            //PlayerMove.JumpCount = 0;
         }
     }
 

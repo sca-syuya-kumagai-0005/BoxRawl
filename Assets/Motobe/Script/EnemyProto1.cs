@@ -1,27 +1,25 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyProto : MonoBehaviour
+public class EnemyProto1 : MonoBehaviour
 {
     float posy;
     float posx;
     Rigidbody2D rb;
     [SerializeField] bool OnGround;
     [SerializeField] bool OnWall;
-    bool Rota;
-    int rota;
 
     public float speed;
     float defaultSpeed;
     bool right;
     int dir;
 
-    public int EnemyCheck;
     bool Jump;
 
     public GameObject EnemySkin;
-    
+
 
     // Start is called before the first frame update
     void Start()
@@ -32,9 +30,7 @@ public class EnemyProto : MonoBehaviour
         dir = 1;
         Jump = false;
         defaultSpeed = speed;
-        int random = Random.Range(0, 4);
-        EnemyCheck = random;
-        Rota = true;
+        SpawnDraw();
     }
 
     // Update is called once per frame
@@ -42,18 +38,15 @@ public class EnemyProto : MonoBehaviour
     {
         if (PlayerMove.PlayerDead)
         {
-            rb.velocity = new Vector2(0,0);
+            rb.velocity = new Vector2(0, 0);
             return;
         }
         if (!PlayerMove.PlayerDead)
         {
-            if (EnemyCheck <= 4)
-            {
                 posy = transform.position.y;
                 posx = transform.position.x;
                 posx += speed * Time.deltaTime * dir;
                 transform.position = new Vector3(posx, posy);
-            }
 
             if (!OnGround)
             {
@@ -63,26 +56,15 @@ public class EnemyProto : MonoBehaviour
             if (right)
             {
                 dir = 1;
-                rota = -1;
             }
             else
             {
                 dir = -1;
-                rota = 1;
             }
             if (Jump)
             {
                 rb.velocity = new Vector3(0, 13, 0);
                 Jump = false;
-            }
-
-            if (Rota)
-            {
-                EnemySkin.transform.Rotate(0, 0, 750 * rota * Time.deltaTime);
-            }
-            if (!Rota)
-            {
-                EnemySkin.transform.rotation = new Quaternion(0, 0, 0, 0);
             }
         }
     }
@@ -96,36 +78,10 @@ public class EnemyProto : MonoBehaviour
 
         if (other.gameObject.CompareTag("Ground"))
         {
-
-            if (EnemyCheck == 0 || EnemyCheck == 3)
-            {
                 transform.position = new Vector3(posx, posy);
                 OnGround = true;
-            }
 
-            if (EnemyCheck == 1)
-            {
-                transform.position = new Vector3(posx, posy + 0.01f * Time.deltaTime);
-                Jump = true;
-            }
-
-            if (EnemyCheck == 2)
-            {
-                transform.position = new Vector3(posx, posy + 0.01f * Time.deltaTime);
-                Jump = true;
-                int random = Random.Range(0, 3);
-                if (random == 0)
-                {
-                    if (right)
-                    {
-                        right = false;
-                    }
-                    else
-                    {
-                        right = true;
-                    }
-                }
-            }
+            
             if (speed != defaultSpeed)
             {
                 speed = defaultSpeed;
@@ -133,15 +89,21 @@ public class EnemyProto : MonoBehaviour
         }
         if (other.gameObject.CompareTag("Drop"))
         {
-            EXPController.EXP += 5*PlayerMove.EXPUP;
+            var sequence = DOTween.Sequence();
+            EXPController.EXP += 3 * PlayerMove.EXPUP;
             PlayerMove.EXPUP += 1;
-            Destroy(this.gameObject);
+            sequence.AppendCallback(() => dest());
         }
 
         if (other.gameObject.CompareTag("DestroyObj"))
         {
             Destroy(this.gameObject);
         }
+    }
+
+    public void dest()
+    {
+        Destroy(this.gameObject);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -154,7 +116,6 @@ public class EnemyProto : MonoBehaviour
         {
             transform.position = new Vector3(posx, posy - 0.2f);
             transform.position = new Vector3(posx, posy - 0.2f);
-            Rota = false;
         }
         if (other.gameObject.CompareTag("Ground"))
         {
@@ -163,12 +124,6 @@ public class EnemyProto : MonoBehaviour
         if (other.gameObject.CompareTag("Wall"))
         {
             OnWall = true;
-            if (EnemyCheck == 1 || EnemyCheck == 2 || EnemyCheck == 3)
-            {
-                rb.velocity = new Vector3(0, 20, 0);
-                OnGround = false;
-                speed += 2;
-            }
             if (right == false)
             {
                 right = true;
@@ -188,26 +143,44 @@ public class EnemyProto : MonoBehaviour
         }
         if (other.gameObject.CompareTag("Ground") || other.gameObject.CompareTag("Button"))
         {
-            Rota = true;
             OnGround = false;
         }
         if (other.gameObject.CompareTag("Wall"))
         {
-            Rota = true;
             OnWall = false;
         }
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void ObjectEnemy(float x, float y)
     {
-
+        GameObject Enemy_prefab = Resources.Load<GameObject>("EnemyProto1-1");
+        GameObject Enemy = Instantiate(Enemy_prefab, new Vector3(x, y, 0), Quaternion.identity);
+        Enemy.transform.parent = this.transform;
+        return;
     }
-    private void OnCollisionStay2D(Collision2D collision)
+    void SpawnDraw()
     {
-
-    }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-
+        int random = Random.Range(0, 17);
+        int rand=0;
+        if (random <= 3){//0123
+            rand = 3;
+        } 
+        else if(random<=10)//45678910
+        {
+            rand = 4;
+        }
+        else if (random <= 15)//1112131415
+        {
+            rand = 5;
+        }
+        else if (random == 16)//
+        {
+            rand = 6;
+        }
+        Debug.Log(random);
+        for (int i = 1; i < rand; i++)
+        {
+            ObjectEnemy(this.transform.position.x, this.transform.position.y + i);
+        }
+        
     }
 }

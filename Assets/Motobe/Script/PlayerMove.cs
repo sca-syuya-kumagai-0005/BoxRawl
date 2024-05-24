@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using Unity.VisualScripting;
 public class PlayerMove : MonoBehaviour
 {
     //Rigidbody
@@ -76,10 +77,17 @@ public class PlayerMove : MonoBehaviour
     //ダメージ演出
     public Image damageEffect;
 
+    //死亡判定
+    public static bool PlayerDead;
+
+    //経験値倍率
+    public static int EXPUP;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        EXPUP = 1;
+        PlayerDead = false;
         JumpCount = 0;
         blink = false;
         blinkCheck = false;
@@ -90,7 +98,7 @@ public class PlayerMove : MonoBehaviour
         invincibleTimeCheck = 0;
         startRota = false;
         EnemySpawnner.SetActive(false);
-
+        
         //ステータスを入力
         JumpForce = DefaultJumpForce + PlusJumpForce;
         Speed = DefaultSpeed + PlusSpeed;
@@ -116,6 +124,51 @@ public class PlayerMove : MonoBehaviour
     {
         //Debug.Log(JumpCount);
 
+        if (EXPUP >= 3)
+        {
+            EXPUP = 3;
+        }
+
+        //ダメージを受けた時の点滅
+        if (blink)
+        {
+            //点滅
+            if (blinkCount > 0.05f)
+            {
+                if (blinkCheck)
+                {
+                    PlayerSkinObject.SetActive(true);
+                    blinkCheck = false;
+                    invincibleTimeCheck++;
+                }
+                else
+                {
+                    PlayerSkinObject.SetActive(false);
+                    blinkCheck = true;
+                    invincibleTimeCheck++;
+                }
+                if (invincibleTimeCheck >= invincibleTime)
+                {
+                    blink = false;
+                    invincibleTimeCheck = 0;
+                }
+                blinkCount = 0;
+            }
+            else
+            {
+                blinkCount += Time.deltaTime;
+            }
+        }
+        if (!blink)
+        {
+            PlayerSkinObject.SetActive(true);
+            blinkCount = 0;
+        }
+
+        if (PlayerDead)
+        {
+            return;
+        }
         if (!ButtonManager.sceneCheck)
         {
             if (startRota)
@@ -132,14 +185,15 @@ public class PlayerMove : MonoBehaviour
                             {
                                 rb.velocity = new Vector3(0, JumpForce, 0);
                                 DoubleWall = true;
+                                SEController.jump = true;
                             }
                         }
                         else
                         {
                             rb.velocity = new Vector3(0, JumpForce, 0);
+                            SEController.jump = true;
                         }
                     }
-
                 }
                 //壁めり込み防止
                 if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
@@ -149,13 +203,14 @@ public class PlayerMove : MonoBehaviour
                 //左移動
                 if (Input.GetKey(KeyCode.A))
                 {
-                    PlayerSkin.rota = 1;
+                    
                     //壁に触れたまま移動しない
                     if (!OnWall)
                     {
                         //ヒップドロップ中に移動しない
                         if (!Drop)
                         {
+                            PlayerSkin.rota = 1;
                             this.transform.position += new Vector3(-Speed * Time.deltaTime, 0, 0);
                         }
                     }
@@ -163,13 +218,14 @@ public class PlayerMove : MonoBehaviour
                 //右移動
                 if (Input.GetKey(KeyCode.D))
                 {
-                    PlayerSkin.rota = -1;
+                    
                     //壁に触れたまま移動しない
                     if (!OnWall)
                     {
                         //ヒップドロップ中に移動しない
                         if (!Drop)
                         {
+                            PlayerSkin.rota = -1;
                             this.transform.position += new Vector3(Speed * Time.deltaTime, 0, 0);
                         }
                     }
@@ -178,14 +234,15 @@ public class PlayerMove : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.S))
                 {
                     //空中にいるとき
-
-                    if (JumpCount == 1||ParyController.parySet)
+                    if (!Drop)
                     {
-                        PlayerSkin.Rota = false;
-                        PlayerSkin.rota = 0;
-                        rb.velocity = new Vector3(0, -JumpForce * 2, 0);
-                        Drop = true;
+                        if (JumpCount == 1 || ParyController.parySet && JumpCount == 1)
+                        {
+                            DropSystem();
+
+                        }
                     }
+                    
                 }
                 //ジャンプ可能か確認用オブジェクトの表示非表示
                 if (JumpCount == 0)
@@ -204,50 +261,10 @@ public class PlayerMove : MonoBehaviour
                     JumpChecker.SetActive(false);
                 }
             }
-            //ヒップドロップ中の判定
-            if (Drop)
-            {
-                DropObject.SetActive(true);
-            }
-            else
+            //ヒップドロップの判定
+            if (!Drop)
             {
                 DropObject.SetActive(false);
-            }
-
-            //ダメージを受けた時の点滅
-            if (blink)
-            {
-                //点滅
-                if (blinkCount > 0.05f)
-                {
-                    if (blinkCheck)
-                    {
-                        PlayerSkinObject.SetActive(true);
-                        blinkCheck = false;
-                        invincibleTimeCheck++;
-                    }
-                    else
-                    {
-                        PlayerSkinObject.SetActive(false);
-                        blinkCheck = true;
-                        invincibleTimeCheck++;
-                    }
-                    if (invincibleTimeCheck >= invincibleTime)
-                    {
-                        blink = false;
-                        invincibleTimeCheck = 0;
-                    }
-                    blinkCount = 0;
-                }
-                else
-                {
-                    blinkCount += Time.deltaTime;
-                }
-            }
-            if (!blink)
-            {
-                PlayerSkinObject.SetActive(true);
-                blinkCount = 0;
             }
         }
     }
@@ -274,8 +291,9 @@ public class PlayerMove : MonoBehaviour
             if (Drop)
             {
                 CameraMove.dropSway = true;
+                SEController.drop2 = true;
             }
-
+            EXPUP = 1;
         }
         if(other.gameObject.CompareTag("Button"))
         {
@@ -303,6 +321,7 @@ public class PlayerMove : MonoBehaviour
         //地面に触れている間
         if (collision.gameObject.CompareTag("Ground")|| collision.gameObject.CompareTag("Button"))
         {
+            Time.timeScale = 1.0f;
             Drop = false;
             PlayerSkin.rota = 0;
             PlayerSkin.Rota = false;
@@ -325,6 +344,7 @@ public class PlayerMove : MonoBehaviour
         //地面から離れたとき
         if (collision.gameObject.CompareTag("Ground")|| collision.gameObject.CompareTag("Button"))
         {
+            //Time.timeScale = 0.1f;
             JumpCount = 1;
             if(ParyObject!=null)
             ParyObject.SetActive(true);
@@ -349,17 +369,42 @@ public class PlayerMove : MonoBehaviour
                             blink = true;
                             CameraMove.damageSway = true;
                             DamageEffect();
+                            SEController.damage = true;
                         }
                         else
                         {
-                            HpObject[0].SetActive(false);
-                            Hp =0;
-                            //死亡演出
+                            CameraMove.damageSway = true;
+                            DamageEffect();
+                            SEController.dead = true;
+                            Dead();
+                            blink = true;
                         }
                     }
                 }
             }
         }
+    }
+
+    public void DropSystem()
+    {
+        var sequence = DOTween.Sequence();
+        rb.velocity = new Vector3(0, JumpForce, 0);
+        Drop = true;
+        SEController.drop1 = true;
+        if (PlayerSkin.rota==0)
+        {
+            PlayerSkin.rota = 1;
+        }
+        PlayerSkin.rota *= -2;
+        sequence.AppendInterval(0.2f);
+        sequence.AppendCallback(() => DropSystem2());
+    }
+    public void DropSystem2()
+    {
+        DropObject.SetActive(true);
+        PlayerSkin.Rota = false;
+        PlayerSkin.rota =0;
+        rb.velocity = new Vector3(0, -JumpForce *  2, 0);
     }
 
     public void StartCount()
@@ -404,6 +449,7 @@ public class PlayerMove : MonoBehaviour
     public void StartEnd()
     {
         startRota = true;
+        
         EnemySpawnner.SetActive(true);
     }
 
@@ -413,7 +459,31 @@ public class PlayerMove : MonoBehaviour
         var img = damageEffect;
         var color = damageEffect.color;
         color.a = 0;
-        sequence.Append(DOTween.ToAlpha(() => img.color, color => img.color = color, 0.8f, 0.1f));
-        sequence.Append(DOTween.ToAlpha(() => img.color, color => img.color = color, 0, 0.1f));
+        for (int i=DefaultHp+PlusHp;i>Hp;i--)
+        {
+            sequence.Append(DOTween.ToAlpha(() => img.color, color => img.color = color, 0.8f, 0.1f));
+            sequence.Append(DOTween.ToAlpha(() => img.color, color => img.color = color, 0, 0.1f));
+        }
+        
+    }
+
+    public void Dead()
+    {
+        var sequence = DOTween.Sequence();
+        //PlayerSkinObject.SetActive(false);
+        HpObject[0].SetActive(false);
+        Hp = 0;
+        PlayerDead = true;
+        EnemySpawnner.SetActive(false);
+        Destroy(rb);
+        PlayerSkin.Rota = false;
+        sequence.AppendInterval(3.0f);
+        //ここにシーン転移のやつ
+        //sequence.AppendCallback(() => SceneChange());
+    }
+
+    public void SceneChange()
+    {
+
     }
 }

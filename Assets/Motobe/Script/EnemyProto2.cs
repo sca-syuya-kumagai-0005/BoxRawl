@@ -20,22 +20,27 @@ public class EnemyProto2 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        EnemySkin.transform.Rotate(0, 0, 750 * rota * Time.deltaTime);
-
-        if (Vector2.Distance(transform.position, new Vector2(PlayerObj.transform.position.x, PlayerObj.transform.position.y)) < 0.1f)
+        if (!PlayerMove.PlayerDead)
         {
+            EnemySkin.transform.Rotate(0, 0, 750 * rota * Time.deltaTime);
 
-        }
-        else
-        {
-            transform.position = Vector2.MoveTowards(transform.position,
-                new Vector2(PlayerObj.transform.position.x, PlayerObj.transform.position.y), 5 * Time.deltaTime);
+            if (Vector2.Distance(transform.position, new Vector2(PlayerObj.transform.position.x, PlayerObj.transform.position.y)) < 0.1f)
+            {
+
+            }
+            else
+            {
+                transform.position = Vector2.MoveTowards(transform.position,
+                    new Vector2(PlayerObj.transform.position.x, PlayerObj.transform.position.y), 5 * Time.deltaTime);
+            }
         }
     }
     private void OnTriggerStay2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Drop"))
         {
+            EXPController.EXP += 5 * PlayerMove.EXPUP;
+            PlayerMove.EXPUP += 1;
             Destroy(this.gameObject);
         }
 
