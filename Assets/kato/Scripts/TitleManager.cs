@@ -19,6 +19,11 @@ public class TitleManager : MonoBehaviour
     private bool isJump = false;
     private bool isStart;
 
+    int moveNum;
+    int EnemyNum;
+
+    public GameObject hallObject;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,14 +31,18 @@ public class TitleManager : MonoBehaviour
         enemyStartPos = EnemyObj.transform.position;
 
         isStart = false;
+
+        moveNum = 0;
+        EnemyNum = 1;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Return))
+        if(Input.GetKeyDown(KeyCode.Return) && !isStart)
         {
             isStart = true;
+            hallObject.SetActive(false);
             startGame();
         }
 
@@ -44,13 +53,24 @@ public class TitleManager : MonoBehaviour
         }
         if(EnemyObj.transform.position.x < -11)
         {
-            EnemyObj.transform.position = enemyStartPos;
+            EnemyNum = Random.Range(0,1);
             isJump = false ;
 
-            if(isStart)
+            if(EnemyNum == 0)
             {
-                Destroy(EnemyObj);
+                EnemyObj.transform.position = enemyStartPos;
             }
+            else if(EnemyNum == 1)
+            {
+                EnemyObj.transform.position = new Vector3(enemyStartPos.x,4.3f,enemyStartPos.z);
+            }
+
+            //if(isStart)
+            //{
+            //    Destroy(EnemyObj);
+            //}
+
+            Debug.Log(EnemyNum);
         }
 
         if(EnemyObj.transform.position.x - playerObj.transform.position.x < 2
@@ -64,11 +84,22 @@ public class TitleManager : MonoBehaviour
                 //startGame();
             }
         }
+
     }
 
     void startGame()
     {
         GroundObj.transform.DOMove(tergetObj.transform.position, 5.0f);
+        if(playerObj.transform.position.x > EnemyObj.transform.position.x)
+        {
+            EnemyObj.transform.DOMove(EnemyObj.transform.position + (tergetObj.transform.position + GroundObj.transform.position), 5.0f);
+        }
+        else
+        {
+            //EnemyObj.transform.DOMove(EnemyObj.transform.position + (GroundObj.transform.position - tergetObj.transform.position), 5.0f);
+            EnemyObj.transform.DOMoveX(EnemyObj.transform.position.x + (GroundObj.transform.position.x - tergetObj.transform.position.x), 5.0f);
+        }
+
         StartCoroutine(playerJump());
         
     }
