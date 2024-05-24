@@ -12,6 +12,9 @@ TagManager:
   - Pary
   - DestroyObj
   - Button
+  - Left
+  - Center
+  - Right
   layers:
   - Default
   - TransparentFX

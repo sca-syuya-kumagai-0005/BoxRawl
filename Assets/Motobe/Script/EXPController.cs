@@ -25,6 +25,7 @@ public class EXPController : MonoBehaviour
     void Update()
     {
         
+        
         if (PlayerMove.EXPUP > expup)
         {
             expup = PlayerMove.EXPUP;
@@ -37,18 +38,19 @@ public class EXPController : MonoBehaviour
         {
             return;
         }
+        
+        EXPGage.rectTransform.sizeDelta = new Vector2(EXP * 19, 75);
+        EXPGage2.rectTransform.sizeDelta = new Vector2(exp * 19, 75);
+        if (EXP > exp)
+        {
+            exp += 10 * expup * Time.deltaTime;
+        }
         if (exp >= 100)
         {
             exp -= 100;
             EXP -= 100;
             //LevelUpSet.SetActive(true);
             //PlayerMove.PlayerDead = true;
-        }
-        EXPGage.rectTransform.sizeDelta = new Vector2(EXP * 19, 75);
-        EXPGage2.rectTransform.sizeDelta = new Vector2(exp * 19, 75);
-        if (EXP > exp)
-        {
-            exp += 10 * expup * Time.deltaTime;
         }
     }
 }

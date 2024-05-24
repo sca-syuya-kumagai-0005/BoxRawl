@@ -36,7 +36,7 @@ public class ParyController : MonoBehaviour
     {
         if (other.gameObject.tag == "Enemy")
         {
-            //PlayerMove.JumpCount = 0;
+            PlayerMove.JumpCount = 0;
         }
     }
 

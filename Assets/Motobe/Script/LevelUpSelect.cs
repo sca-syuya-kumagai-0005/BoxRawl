@@ -13,6 +13,11 @@ public class LevelUpSelect : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        this.gameObject.SetActive(true);
+        if (Input.GetKey(KeyCode.Space))
+        {
+            PlayerMove.PlayerDead = false;
+            this.gameObject.SetActive(false);
+        }
     }
 }
