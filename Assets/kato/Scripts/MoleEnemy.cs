@@ -30,42 +30,43 @@ public class MoleEnemy : MonoBehaviour
     {
         timer += Time.deltaTime;
 
-        if(smoke != null)
+        if (smoke != null)
         {
-            Destroy(smoke,3.0f);
+            Destroy(smoke, 3.0f);
         }
 
-        if(onGroun)
+        if (onGroun)
         {
             this.gameObject.transform.position = GroundPos;
         }
 
-        if(timer > 4 && onGroun)
+        if (timer > 4 && onGroun)
         {
             onGroun = false;
-            rg.velocity = new Vector2(0, 9.5f) * 1;
+            rg.velocity = new Vector2(0, 9.5f);
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        
-    }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
         if (collision.gameObject.tag == "Ground")
         {
+            rg.gravityScale = 0;
             addPos_X = Random.RandomRange(-10, 10);
             timer = 0;
-            smokePos = new Vector3(this.gameObject.transform.position.x + addPos_X,this.gameObject.transform.position.y - 0.5f,this.gameObject.transform.position.z);
-            this.gameObject.transform.DOMoveY(this.transform.position.y - 1,1.0f).OnComplete(OnGround);
+            smokePos = new Vector3(this.gameObject.transform.position.x + addPos_X, this.gameObject.transform.position.y - 0.5f, this.gameObject.transform.position.z);
+            this.gameObject.transform.DOMoveY(this.transform.position.y - 1, 1.0f).OnComplete(OnGround);
         }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        rg.gravityScale = 1;
     }
 
     private void OnGround()
     {
-        GroundPos = new Vector3(this.gameObject.transform.position.x+addPos_X, this.gameObject.transform.position.y, 0);
+        GroundPos = new Vector3(this.gameObject.transform.position.x + addPos_X, this.gameObject.transform.position.y, 0);
         smoke = Instantiate(smokePrefab, smokePos, Quaternion.identity);
         onGroun = true;
     }
