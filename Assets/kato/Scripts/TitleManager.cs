@@ -14,6 +14,7 @@ public class TitleManager : MonoBehaviour
     Rigidbody2D rg;
 
     [SerializeField] GameObject EnemyObj;
+    Rigidbody2D EnemyRg;
     Vector3 enemyStartPos;
 
     private bool isJump = false;
@@ -28,18 +29,21 @@ public class TitleManager : MonoBehaviour
     void Start()
     {
         rg = playerObj.GetComponent<Rigidbody2D>();
+        EnemyRg = EnemyObj.GetComponent<Rigidbody2D>();
         enemyStartPos = EnemyObj.transform.position;
 
         isStart = false;
 
         moveNum = 0;
-        EnemyNum = 1;
+        EnemyNum = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Return) && !isStart)
+        //ゲームスタート
+        if(Input.GetKeyDown(KeyCode.Return) && !isStart
+            || Input.GetKeyDown(KeyCode.Space) && !isStart)
         {
             isStart = true;
             hallObject.SetActive(false);
@@ -53,35 +57,45 @@ public class TitleManager : MonoBehaviour
         }
         if(EnemyObj.transform.position.x < -11)
         {
-            EnemyNum = Random.Range(0,1);
+            EnemyNum = Random.Range(0,2);
+            moveNum = Random.Range(0,2);
             isJump = false ;
 
             if(EnemyNum == 0)
             {
+                EnemyRg.velocity = Vector2.zero;
+                EnemyRg.angularVelocity = 0.0f;
+                EnemyRg.gravityScale = 0.0f;
                 EnemyObj.transform.position = enemyStartPos;
             }
             else if(EnemyNum == 1)
             {
+                EnemyRg.velocity = Vector2.zero;
+                EnemyRg.angularVelocity = 0.0f;
+                EnemyRg.gravityScale = 0.12f;
                 EnemyObj.transform.position = new Vector3(enemyStartPos.x,4.3f,enemyStartPos.z);
             }
-
-            //if(isStart)
-            //{
-            //    Destroy(EnemyObj);
-            //}
 
             Debug.Log(EnemyNum);
         }
 
+        //playerの動き
         if(EnemyObj.transform.position.x - playerObj.transform.position.x < 2
             && !isJump)
         {
             rg.velocity = new Vector2(0, 8.0f) * 1;
             isJump = true;
 
-            if(isStart)
+            if(moveNum == 1)
             {
-                //startGame();
+                StartCoroutine(playerAttack());
+            }
+
+            if(EnemyNum == 1)
+            {
+                EnemyRg.velocity = Vector3.zero;
+                EnemyRg.angularVelocity = 0.0f;
+                EnemyRg.gravityScale = -0.11f;
             }
         }
 
@@ -107,12 +121,26 @@ public class TitleManager : MonoBehaviour
     public IEnumerator playerJump()
     {
         yield return new WaitForSeconds(3.0f);
-        rg.velocity = new Vector2(1, 9.5f) * 1;
+        //rg.velocity = new Vector2(1, 9.5f);
+        Vector2 force = new Vector3(1.0f, 9.5f);
+        rg.AddForce(force *50);
 
         yield return new WaitForSeconds(3.0f);
-        //SceneManager.LoadScene("Menu");
+        SceneManager.LoadScene("Menu");
         yield return null;
     }
 
+    IEnumerator playerAttack()
+    {
+        yield return new WaitForSeconds(0.4f);
+        rg.gravityScale = 20.0f;
+        yield return new WaitForSeconds(0.2f);
+        if(moveNum == 1)
+        {
+            EnemyObj.transform.position = new Vector3(-12.0f, 0f, 0f);
+        }
+        yield return new WaitForSeconds(0.3f);
+        rg.gravityScale = 1.0f;
+    }
 
 }
