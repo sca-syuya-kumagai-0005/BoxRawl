@@ -49,8 +49,8 @@ public class EXPController : MonoBehaviour
         {
             exp -= 100;
             EXP -= 100;
-            LevelUpSet.SetActive(true);
-            PlayerMove.PlayerDead = true;
+            //LevelUpSet.SetActive(true);
+            //PlayerMove.PlayerDead = true;
         }
     }
 }

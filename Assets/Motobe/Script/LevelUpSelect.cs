@@ -6,6 +6,7 @@ public class LevelUpSelect : MonoBehaviour
 {
     public GameObject Select;
     public GameObject SelectBack;
+    public GameObject[] Level;
     int set;
     int dir;
 
@@ -39,6 +40,18 @@ public class LevelUpSelect : MonoBehaviour
         if (SelectBack.transform.position.x < Select.transform.position.x && dir == -1)
         {
             Select.transform.position += new Vector3(-75f * Time.deltaTime, 0, 0);
+        }
+        if (set == 1)
+        {
+            
+        }
+        if (set == 2)
+        {
+
+        }
+        if (set == 3)
+        {
+
         }
     }
 }
