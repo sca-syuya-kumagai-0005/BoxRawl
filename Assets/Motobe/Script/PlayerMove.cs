@@ -129,6 +129,10 @@ public class PlayerMove : MonoBehaviour
             EXPUP = 3;
         }
 
+        if (PlayerDead)
+        {
+            EnemySpawnner.SetActive(false);
+        }
         //ダメージを受けた時の点滅
         if (blink)
         {
