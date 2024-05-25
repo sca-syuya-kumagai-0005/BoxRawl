@@ -27,7 +27,7 @@ public class LevelUpSelect : MonoBehaviour
         {
             set += 1;
             SelectBack.transform.position += new Vector3(7.5f, 0, 0);
-        }
+        }/*
         if (set > 3)
         {
             set = 3;
@@ -36,5 +36,6 @@ public class LevelUpSelect : MonoBehaviour
         {
             set = 1;
         }
+        */
     }
 }
