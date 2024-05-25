@@ -49,9 +49,9 @@ public class ButtonManager : MonoBehaviour
                             thisSceneName = "Main Game";
                         }
                         break;
-                    case "Title":
+                    case "Tutorial":
                         {
-                            thisSceneName = "Title";
+                            thisSceneName = "Tutorial";
                         }
                         break;
                 }
@@ -72,7 +72,7 @@ public class ButtonManager : MonoBehaviour
     //ステータス割り振りの時にはこのシーンはスキップする
     private void SceneCheck()
     {
-        if(sceneCheck&&sceneName.text=="Title"||sceneName.text=="Main Game")
+        if(sceneCheck&&sceneName.text=="Tutorial"||sceneName.text=="Main Game")
         {
             sceneCheckBackGround.SetActive(true) ;
             if(Input.GetKeyDown(KeyCode.Z))
