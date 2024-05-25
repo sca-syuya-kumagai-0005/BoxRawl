@@ -63,7 +63,10 @@ public class ButtonManager : MonoBehaviour
       
     }
 
-    
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        thisSceneName = "";
+    }
 
     //選択したときにそのシーンに移動するかどうかをチェックする
     //ステータス割り振りの時にはこのシーンはスキップする
@@ -79,6 +82,7 @@ public class ButtonManager : MonoBehaviour
             if(Input.GetKeyDown(KeyCode.X))
             {
                 yesOrNo = "No";
+                
                 sceneCheck = false;
             }
         }
