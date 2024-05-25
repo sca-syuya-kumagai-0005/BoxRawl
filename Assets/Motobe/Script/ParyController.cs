@@ -9,10 +9,12 @@ public class ParyController : MonoBehaviour
 {
     public GameObject PlayerObject;
     public static bool parySet;
+    public static bool paryJump;
     // Start is called before the first frame update
     void Start()
     {
         parySet = false;
+        paryJump = false;
     }
 
     // Update is called once per frame
@@ -37,6 +39,7 @@ public class ParyController : MonoBehaviour
         if (other.gameObject.tag == "Enemy")
         {
             PlayerMove.JumpCount = 0;
+            paryJump = true;
         }
     }
 
@@ -54,6 +57,7 @@ public class ParyController : MonoBehaviour
         {
             PlayerMove.JumpCount = 1;
             parySet = false;
+            paryJump = false;
             PlayerMove.paryCheck = false;
         }
     }

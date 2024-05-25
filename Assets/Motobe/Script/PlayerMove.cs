@@ -236,10 +236,9 @@ public class PlayerMove : MonoBehaviour
                     //‹ó’†‚É‚¢‚é‚Æ‚«
                     if (!Drop)
                     {
-                        if (JumpCount == 1 || ParyController.parySet)
+                        if (JumpCount == 1||ParyController.paryJump)
                         {
                             DropSystem();
-
                         }
                     }
                     
