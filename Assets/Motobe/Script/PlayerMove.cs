@@ -24,23 +24,25 @@ public class PlayerMove : MonoBehaviour
     public GameObject[] HpObject;
 
     //ジャンプの高さ関係
-    [SerializeField] public float DefaultJumpForce;
-    [SerializeField] public float PlusJumpForce;
+    public float DefaultJumpForce;
+    public static float PlusJumpForce;
     private float JumpForce;
 
     //速さ関係
-    [SerializeField] public float DefaultSpeed;
-    [SerializeField] public float PlusSpeed;
+    public float DefaultSpeed;
+    public static float PlusSpeed;
     private float Speed;
 
+    /*
     //大きさ関係(ステージの構成的にヒップドロップの範囲強化のほうが良さそうと提案)
-    [SerializeField] public float DefaultSize;
-    [SerializeField] public float PlusSize;
-    private float Size;
+    //[SerializeField] public float DefaultSize;
+    //[SerializeField] public float PlusSize;
+    //private float Size;
+    */
 
     //体力関係
-    private int DefaultHp=2;
-    [SerializeField] public int PlusHp;
+    private int DefaultHp=5;
+    //[SerializeField] public int PlusHp;
     private int Hp;
 
     //空中に居るかの判定
@@ -56,13 +58,15 @@ public class PlayerMove : MonoBehaviour
     public static bool Drop;
 
     //ダメージを受けているかの確認
-    private bool blink;
+    public static bool blink;
     private bool blinkCheck;
     float blinkCount;
 
     //ダメージを受けた後の無敵時間
     //invincibleTime*0.05秒無敵時間(invincibleTime==8なら0.4秒)
-    public int invincibleTime;
+    public int DefaultInvincibleTime;
+    public static int PlusInvincibleTime;
+    private int InvincibleTime;
     int invincibleTimeCheck;
 
     //スタート処理
@@ -98,12 +102,12 @@ public class PlayerMove : MonoBehaviour
         invincibleTimeCheck = 0;
         startRota = false;
         EnemySpawnner.SetActive(false);
+        PlusSpeed = 0;
+        PlusJumpForce = 0;
+
         
-        //ステータスを入力
-        JumpForce = DefaultJumpForce + PlusJumpForce;
-        Speed = DefaultSpeed + PlusSpeed;
-        Size = DefaultSize + PlusSize;
-        Hp = DefaultHp + PlusHp;
+        //Size = DefaultSize + PlusSize;
+        Hp = 5;//DefaultHp + PlusHp;
 
         for(int i = 0; i < 5; i++)
         {
@@ -124,9 +128,14 @@ public class PlayerMove : MonoBehaviour
     {
         //Debug.Log(JumpCount);
 
-        if (EXPUP >= 3)
+        //ステータスを入力
+        JumpForce = DefaultJumpForce + PlusJumpForce;
+        Speed = DefaultSpeed + PlusSpeed;
+        InvincibleTime = DefaultInvincibleTime + PlusInvincibleTime;
+
+        if (EXPUP >= 1)
         {
-            EXPUP = 3;
+            EXPUP = 10;
         }
 
         if (PlayerDead)
@@ -151,7 +160,7 @@ public class PlayerMove : MonoBehaviour
                     blinkCheck = true;
                     invincibleTimeCheck++;
                 }
-                if (invincibleTimeCheck >= invincibleTime)
+                if (invincibleTimeCheck >= InvincibleTime)
                 {
                     blink = false;
                     invincibleTimeCheck = 0;
@@ -240,7 +249,7 @@ public class PlayerMove : MonoBehaviour
                     //空中にいるとき
                     if (!Drop)
                     {
-                        if (JumpCount == 1||ParyController.paryJump)
+                        if (JumpCount == 1||ParyController.parySet)
                         {
                             DropSystem();
                         }
@@ -462,7 +471,7 @@ public class PlayerMove : MonoBehaviour
         var img = damageEffect;
         var color = damageEffect.color;
         color.a = 0;
-        for (int i=DefaultHp+PlusHp;i>Hp;i--)
+        for (int i=5/*DefaultHp+PlusHp*/;i>Hp;i--)
         {
             sequence.Append(DOTween.ToAlpha(() => img.color, color => img.color = color, 0.8f, 0.1f));
             sequence.Append(DOTween.ToAlpha(() => img.color, color => img.color = color, 0, 0.1f));

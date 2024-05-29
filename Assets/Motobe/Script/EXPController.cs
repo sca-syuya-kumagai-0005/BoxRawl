@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class EXPController : MonoBehaviour
 {
     public static float EXP;
-    public float exp;
+    float exp;
     public Image EXPGage;
     public Image EXPGage2;
     public GameObject LevelUpSet;
@@ -49,8 +49,8 @@ public class EXPController : MonoBehaviour
         {
             exp -= 100;
             EXP -= 100;
-            //LevelUpSet.SetActive(true);
-            //PlayerMove.PlayerDead = true;
+            LevelUpSet.SetActive(true);
+            PlayerMove.PlayerDead = true;
         }
     }
 }
