@@ -293,7 +293,7 @@ public class PlayerMove : MonoBehaviour
                 
                 //Time.timeScale = 0;
             }
-            else if(SceneManager.GetActiveScene().name=="TmpMenu")
+            else if(SceneManager.GetActiveScene().name=="Menu")
             {
                 PlayerSkin.Rota = false;
                 startRota = true;
@@ -374,7 +374,13 @@ public class PlayerMove : MonoBehaviour
                 {
                     if (!blink)
                     {
-                        if (Hp > 1)
+                        if(PlayerUp.setBarrier)
+                        {
+                            Debug.Log("ƒoƒŠƒA");
+                            blink = true;
+                            PlayerUp.setBarrier = false;
+                        }
+                        else if (Hp > 1)
                         {
                             HpObject[Hp - 1].SetActive(false);
                             Hp -= 1;
