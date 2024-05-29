@@ -252,7 +252,7 @@ GameObject:
   - component: {fileID: 182680270}
   m_Layer: 0
   m_Name: Square
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -541,6 +541,7 @@ GameObject:
   - component: {fileID: 420127674}
   - component: {fileID: 420127673}
   - component: {fileID: 420127672}
+  - component: {fileID: 420127675}
   m_Layer: 0
   m_Name: EnemyObj
   m_TagString: Untagged
@@ -687,6 +688,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &420127675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 420127670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ad04741c41c12c429cdfb3cd0134ece, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerObj: {fileID: 1942319893}
 --- !u!1 &429264106
 GameObject:
   m_ObjectHideFlags: 0
@@ -1406,8 +1420,9 @@ GameObject:
   - component: {fileID: 1942319896}
   - component: {fileID: 1942319895}
   - component: {fileID: 1942319894}
+  - component: {fileID: 1942319898}
   m_Layer: 0
-  m_Name: Square
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1552,6 +1567,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1942319898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1942319893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c83d6949fc377944db3f6a8cce139042, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EnemyObj: {fileID: 420127670}
 --- !u!1 &2102107311
 GameObject:
   m_ObjectHideFlags: 0
