@@ -93,8 +93,10 @@ public class PlayerMove : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if(Ceiling.gameObject!=null)
-        Ceiling.SetActive(false);
+        if (Ceiling != null)
+        {
+            Ceiling.SetActive(false);
+        }
         EXPUP = 1;
         PlayerDead = false;
         JumpCount = 0;
@@ -138,9 +140,9 @@ public class PlayerMove : MonoBehaviour
         Speed = DefaultSpeed + PlusSpeed;
         InvincibleTime = DefaultInvincibleTime + PlusInvincibleTime;
 
-        if (EXPUP >= 1)
+        if (EXPUP >= 3)
         {
-            EXPUP = 10;
+            EXPUP = 3;
         }
 
         if (PlayerDead)
@@ -295,8 +297,11 @@ public class PlayerMove : MonoBehaviour
             {
                 PlayerSkin.Rota = false;
                 StartCount();
-                if (Ceiling.gameObject != null)
+                if (Ceiling != null)
+                {
                     Ceiling.SetActive(true);
+                }
+                    
                 //Time.timeScale = 0;
             }
             else if(SceneManager.GetActiveScene().name=="Menu")
