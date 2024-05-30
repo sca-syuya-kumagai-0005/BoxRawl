@@ -7,8 +7,10 @@ public class LevelUpSelect : MonoBehaviour
 {
     public GameObject Select;
     public GameObject SelectBack;
+    public GameObject SelectBackDefault;
     public GameObject Select2;
     public GameObject Select2Back;
+    public GameObject Select2BackDefault;
     public GameObject[] Level;
     bool conf;
     public GameObject ConfirmWindow;
@@ -103,6 +105,13 @@ public class LevelUpSelect : MonoBehaviour
                 conf = false;
                 if (set2 == 0)
                 {
+                    set = 2;
+                    dir = 0;
+                    set2 = 0;
+                    SelectBack.transform.position = SelectBackDefault.transform.position;
+                    Select.transform.position = SelectBackDefault.transform.position;
+                    Select2Back.transform.position = Select2BackDefault.transform.position;
+                    Select2.transform.position = Select2BackDefault.transform.position;
                     ConfirmWindow.SetActive(false);
                 }
                 if (set2 == 1)
@@ -118,10 +127,13 @@ public class LevelUpSelect : MonoBehaviour
                     {
                         PlayerMove.PlusInvincibleTime += 4;
                     }
+                    set = 2;
+                    dir = 0;
                     set2 = 0;
-                    Select2Back.transform.position += new Vector3(-8.9f, 0, 0);
-                    Select2.transform.position = Select2Back.transform.position;
-                    dir = -1;
+                    SelectBack.transform.position = SelectBackDefault.transform.position;
+                    Select.transform.position = SelectBackDefault.transform.position;
+                    Select2Back.transform.position=Select2BackDefault.transform.position;
+                    Select2.transform.position = Select2BackDefault.transform.position;
                     EnemySpawner.SetActive(true);
                     ConfirmWindow.SetActive(false);
                     PlayerMove.blink = true;
