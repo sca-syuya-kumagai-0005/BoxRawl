@@ -159,7 +159,7 @@ public class EnemyProto1 : MonoBehaviour
     }
     void SpawnDraw()
     {
-        int random = Random.Range(0, 17);
+        int random = Random.Range(0, 10);
         int rand=0;
         if (random <= 3){//0123
             rand = 3;

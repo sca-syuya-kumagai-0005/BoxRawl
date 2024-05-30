@@ -28,10 +28,21 @@ public class EnemyProto : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         OnGround = false;
-        right = false;
-        dir = 1;
+        int rand = Random.Range(0, 2);
+        if (rand == 0)
+        {
+            right = false;
+            dir = 1;
+        }
+        else
+        {
+            right = true;
+            dir = -1;
+        }
+        
         Jump = false;
-        defaultSpeed = speed;
+        float speedrand=Random.Range(0, 2.0f);
+        defaultSpeed = speed+speedrand;
         int random = Random.Range(0, 4);
         EnemyCheck = random;
         Rota = true;
@@ -193,6 +204,7 @@ public class EnemyProto : MonoBehaviour
         }
         if (other.gameObject.CompareTag("Wall"))
         {
+            if(EnemyCheck == 1 || EnemyCheck == 2 || EnemyCheck == 3)
             Rota = true;
             OnWall = false;
         }

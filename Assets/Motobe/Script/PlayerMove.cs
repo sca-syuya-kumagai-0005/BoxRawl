@@ -87,9 +87,14 @@ public class PlayerMove : MonoBehaviour
     //経験値倍率
     public static int EXPUP;
 
+    //天井
+    public GameObject Ceiling;
+
     // Start is called before the first frame update
     void Start()
     {
+        if(Ceiling.gameObject!=null)
+        Ceiling.SetActive(false);
         EXPUP = 1;
         PlayerDead = false;
         JumpCount = 0;
@@ -290,7 +295,8 @@ public class PlayerMove : MonoBehaviour
             {
                 PlayerSkin.Rota = false;
                 StartCount();
-                
+                if (Ceiling.gameObject != null)
+                    Ceiling.SetActive(true);
                 //Time.timeScale = 0;
             }
             else if(SceneManager.GetActiveScene().name=="Menu")
@@ -497,11 +503,11 @@ public class PlayerMove : MonoBehaviour
         PlayerSkin.Rota = false;
         sequence.AppendInterval(3.0f);
         //ここにシーン転移のやつ
-        //sequence.AppendCallback(() => SceneChange());
+        sequence.AppendCallback(() => SceneChange());
     }
 
     public void SceneChange()
     {
-
+        SceneManager.LoadScene("Menu");
     }
 }

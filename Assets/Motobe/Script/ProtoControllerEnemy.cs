@@ -62,7 +62,7 @@ public class ProtoControllerEnemy : MonoBehaviour
     }
     private void ObjectEnemy3(float x, float y)
     {
-        GameObject Enemy_prefab = Resources.Load<GameObject>("EnemyProto3");
+        GameObject Enemy_prefab = Resources.Load<GameObject>("EnemyProto");
         GameObject Enemy = Instantiate(Enemy_prefab, new Vector3(x, y, 0), Quaternion.identity);
         return;
     }
@@ -71,19 +71,19 @@ public class ProtoControllerEnemy : MonoBehaviour
         int random = Random.Range(0, 4);
         if (random == 0)
         {
-            ObjectEnemy(25, 13);
+            ObjectEnemy(40, 13);
         }
         if (random == 1)
         {
-            ObjectEnemy1(25, 13);
+            ObjectEnemy1(40, 13);
         }
         if (random == 2)
         {
-            ObjectEnemy2(25, 13);
+            ObjectEnemy2(40, 30);
         }
         if (random == 3)
         {
-            ObjectEnemy3(25, 13);
+            ObjectEnemy3(40, 13);
         }
 
     }
@@ -92,19 +92,19 @@ public class ProtoControllerEnemy : MonoBehaviour
         int random = Random.Range(0, 4);
         if (random == 0)
         {
-            ObjectEnemy(-25, 13);
+            ObjectEnemy(-40, 22);
         }
         if (random == 1)
         {
-            ObjectEnemy1(-25, 13);
+            ObjectEnemy1(-40, 22);
         }
         if (random == 2)
         {
-            ObjectEnemy2(-25, 13);
+            ObjectEnemy2(-40, 30);
         }
         if (random == 3)
         {
-            ObjectEnemy3(-25, 13);
+            ObjectEnemy3(-40, 22);
         }
     }
     void SpawnDraw3()
@@ -112,19 +112,19 @@ public class ProtoControllerEnemy : MonoBehaviour
         int random = Random.Range(0, 4);
         if (random == 0)
         {
-            ObjectEnemy(0, 13);
+            ObjectEnemy(0, 22);
         }
         if (random == 1)
         {
-            ObjectEnemy1(0, 13);
+            ObjectEnemy1(0, 22);
         }
         if (random == 2)
         {
-            ObjectEnemy2(0, 13);
+            ObjectEnemy2(0, 30);
         }
         if (random == 3)
         {
-            ObjectEnemy3(0, 13);
+            ObjectEnemy3(0, 22);
         }
     }
     void SpawnDraw4()
@@ -132,5 +132,7 @@ public class ProtoControllerEnemy : MonoBehaviour
         SpawnDraw();
         SpawnDraw2();
         SpawnDraw3();
+        ObjectEnemy2(20, 30);
+        ObjectEnemy2(-20, 30);
     }
 }
