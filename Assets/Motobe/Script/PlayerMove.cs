@@ -253,6 +253,7 @@ public class PlayerMove : MonoBehaviour
                 //ヒップドロップ
                 if (Input.GetKeyDown(KeyCode.S))
                 {
+                    Debug.Log(ParyController.parySet);
                     //空中にいるとき
                     if (!Drop)
                     {

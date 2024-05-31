@@ -11,6 +11,7 @@ public class EnemyProto : MonoBehaviour
     [SerializeField] bool OnWall;
     bool Rota;
     int rota;
+    bool wallSpeed;
 
     public float speed;
     float defaultSpeed;
@@ -26,6 +27,7 @@ public class EnemyProto : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        wallSpeed = false;
         rb = GetComponent<Rigidbody2D>();
         OnGround = false;
         int rand = Random.Range(0, 2);
@@ -107,7 +109,7 @@ public class EnemyProto : MonoBehaviour
 
         if (other.gameObject.CompareTag("Ground"))
         {
-
+            wallSpeed = false;
             if (EnemyCheck == 0 || EnemyCheck == 3)
             {
                 transform.position = new Vector3(posx, posy);
@@ -178,7 +180,10 @@ public class EnemyProto : MonoBehaviour
             {
                 rb.velocity = new Vector3(0, 20, 0);
                 OnGround = false;
-                speed += 2;
+                if (wallSpeed == false){
+                    speed += 3;
+                    wallSpeed = true;
+                }
             }
             if (right == false)
             {

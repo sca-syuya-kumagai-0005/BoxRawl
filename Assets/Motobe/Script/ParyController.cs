@@ -24,7 +24,6 @@ public class ParyController : MonoBehaviour
         transform.position = PlayerObject.transform.position;
         if (parySet)
         {
-
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 PlayerMove.JumpCount = 1;
