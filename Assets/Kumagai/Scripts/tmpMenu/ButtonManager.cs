@@ -19,11 +19,13 @@ public class ButtonManager : MonoBehaviour
     private string yesOrNo;
     [SerializeField] private string thisSceneName;
     public static bool sceneCheck;
+    public static bool sceneChange;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        sceneChange = false;
         sceneCheck = false;
         yesOrNo = "No";
         StartCoroutine(ButtonStart());
@@ -110,7 +112,7 @@ public class ButtonManager : MonoBehaviour
 
 
     //シーン切り替え時の演出（仮）
-    private IEnumerator SceneChanger()
+    public IEnumerator SceneChanger()
     {
         //mainCamera.transform.position = new Vector3(Player.transform.position.x, 2, -10);
         Player.GetComponent<Rigidbody2D>().gravityScale = 5;
@@ -124,7 +126,7 @@ public class ButtonManager : MonoBehaviour
         sceneGround.SetActive(false);
         this.gameObject.transform.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
         this.gameObject.transform.GetComponent<BoxCollider2D>().isTrigger = true;
-       
+        sceneChange=true;   
         yield return new WaitForSeconds(2f);
         SceneManager.LoadScene(thisSceneName);
     }

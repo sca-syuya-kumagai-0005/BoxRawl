@@ -21,6 +21,8 @@ public class TitleManager : MonoBehaviour
 
     public GameObject hallObject;
 
+    bool startFlag;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,6 +30,7 @@ public class TitleManager : MonoBehaviour
 
         isStart = false;
 
+        startFlag = false;
     }
 
     // Update is called once per frame
@@ -41,6 +44,8 @@ public class TitleManager : MonoBehaviour
             hallObject.SetActive(false);
             startGame();
         }
+
+        FadeIO.FadeOut(startFlag);
     }
 
     void startGame()
@@ -65,7 +70,9 @@ public class TitleManager : MonoBehaviour
         Vector2 force = new Vector3(1.0f, 9.5f);
         rg.AddForce(force *50);
 
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(2.0f);
+        startFlag = true;
+        yield return new WaitForSeconds(2.0f);
         SceneManager.LoadScene("Menu");
         yield return null;
     }
