@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4076647813211328043}
   - component: {fileID: 8690908615079304376}
-  m_Layer: 2
+  m_Layer: 6
   m_Name: Square (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 8833631537820832151}
   - component: {fileID: 2713742547811765331}
   - component: {fileID: 2253887191887303101}
-  m_Layer: 2
+  m_Layer: 6
   m_Name: EnemyProto1-1
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -267,7 +267,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6678876038816980261}
   - component: {fileID: 6200686406655234025}
-  m_Layer: 2
+  m_Layer: 6
   m_Name: EnemySkin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -354,7 +354,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6814822235677715535}
   - component: {fileID: 8034291556647402045}
-  m_Layer: 2
+  m_Layer: 6
   m_Name: Square (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -438,7 +438,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1362678422220976375}
   - component: {fileID: 4701101348608430226}
-  m_Layer: 2
+  m_Layer: 6
   m_Name: Square (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -522,7 +522,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2680689953868714758}
   - component: {fileID: 5979859699721333513}
-  m_Layer: 2
+  m_Layer: 6
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -607,7 +607,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2817145747717400620}
   - component: {fileID: 120761546329155839}
-  m_Layer: 2
+  m_Layer: 6
   m_Name: PlayerSkin (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
