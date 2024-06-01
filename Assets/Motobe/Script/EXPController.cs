@@ -15,6 +15,7 @@ public class EXPController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //Fade.FadeOut(true);
         EXP = 0;
         exp = 0;
         expup = 0;

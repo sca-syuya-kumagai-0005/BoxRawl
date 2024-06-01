@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class FadeIO : MonoBehaviour
+public class Fade : MonoBehaviour
 {
     [SerializeField] public GameObject fadePanel;
     public static GameObject fader;
@@ -32,13 +32,11 @@ public class FadeIO : MonoBehaviour
     }
     public static void FadeOut(bool flag)
     {
-            Debug.Log("フェードアウトします");
-            if (flag)
-            { 
-                alpha += Time.deltaTime / 2;
-                fader.gameObject.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, alpha);
-            }
-        
-
+        Debug.Log("フェードアウトします");
+        if (flag)
+        {
+            alpha += Time.deltaTime / 2;
+            fader.gameObject.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, alpha);
+        }
     }
 }
